@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navHearder{
+  text-shadow: 1px 1px rgb(63, 62, 62);
+}
