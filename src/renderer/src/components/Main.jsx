@@ -3,9 +3,11 @@ import iconBox from '../assets/icons/box.svg'
 import iconDropBox from '../assets/icons/dropbox.svg'
 
 export function Main() {
-  ;(async () => {
-    const data = await window.api.getTest()
-    console.log(data)
+
+  (async ()=> {
+      const response =  await window.api.createProduct({})
+      console.log(response)
+     
   })()
 
   return (
