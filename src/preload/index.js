@@ -1,9 +1,10 @@
-import { contextBridge } from 'electron'
+import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import {Sqlite3Module} from "@sequelize/sqlite3"
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  createProduct: (product) => ipcRenderer.invoke('create-product',product) 
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -1,5 +1,5 @@
 {
-  "name": "controle-story",
+  "name": "controle_estoque",
   "version": "1.0.0",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
@@ -21,8 +21,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@sequelize/sqlite3": "^7.0.0-alpha.41",
-    "controle-story": "file:",
-    "jimp": "^0.22.12"
+    "joi": "^17.13.3"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
@@ -38,7 +37,7 @@
     "prettier": "^3.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^3.4.9",
+    "tailwindcss": "^3.4.10",
     "vite": "^5.3.1",
     "vitest": "^2.0.5"
   }
