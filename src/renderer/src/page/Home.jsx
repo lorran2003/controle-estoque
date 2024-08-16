@@ -1,11 +1,12 @@
+/* eslint-disable react/prop-types */
 import { Header } from '../components/Header'
 import { Main } from '../components/Main'
 
-export function Home() {
+export function Home({ setRenderPage }) {
   return (
-    <main>
+    <section>
       <Header />
-      <Main />
-    </main>
+      <Main setRenderPage={setRenderPage} />
+    </section>
   )
 }

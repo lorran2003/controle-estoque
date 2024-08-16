@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import iconBoxes from '../assets/icons/boxes.svg'
 import iconBox from '../assets/icons/box.svg'
 import iconDropBox from '../assets/icons/dropbox.svg'
 
-export function Main() {
+export function Main({ setRenderPage }) {
   ;(async () => {
     const data = await window.api.getTest()
     console.log(data)
@@ -21,10 +22,14 @@ export function Main() {
 
             <h2 className="py-4">Cadastro de produtos</h2>
 
-            <a href="#">
-              {' '}
-              <span className="bg-[#DAA520] rounded-md p-1 text-zinc-50">Cadastrar</span>
-            </a>
+            <button
+              aria-label="cadastrar produto"
+              type="button"
+              className="bg-[#DAA520] rounded-md p-1 text-zinc-50"
+              onClick={() => setRenderPage('product')}
+            >
+              Cadastrar
+            </button>
           </div>
         </div>
 
