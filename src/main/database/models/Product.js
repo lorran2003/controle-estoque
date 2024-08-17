@@ -5,7 +5,6 @@ const ProductModel = (sequelize) => {
         id:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
-            unique:true,
             primaryKey:true
         },
         name:{
