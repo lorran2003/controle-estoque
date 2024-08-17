@@ -13,6 +13,13 @@ const ProductModel = (sequelize) => {
             allowNull:false,
             unique:true
         },
+        code:{
+            type:DataTypes.STRING(6),
+            unique:true,
+            validate: {
+                is: /^[A-Z0-9]{6}$/
+            }
+        },
         img:{
             type:DataTypes.STRING,
             allowNull:true
