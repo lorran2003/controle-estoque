@@ -136,7 +136,7 @@ const findByName = async (event, name) => {
 
 }
 
-export const destroy = async (event,id) => {
+export const destroy = async (event, id) => {
   try {
     const { error, value: idValid } = destroyValidator(id)
 
@@ -169,9 +169,9 @@ export const destroy = async (event,id) => {
   }
 }
 
-export const update = async (event,product) => {
+export const update = async (event, product) => {
   try {
-    const {error,value:productValid} = updateValidator(product)
+    const { error, value: productValid } = updateValidator(product)
 
     if (error) {
       throw new CustomError(error.message)
@@ -184,11 +184,11 @@ export const update = async (event,product) => {
     }
 
     await productFound.update(productValid)
-    
+
     const response = {
-      error:false,
-      msg:"Produto atualizado com sucesso",
-      data:productFound.dataValues
+      error: false,
+      msg: "Produto atualizado com sucesso",
+      data: productFound.dataValues
     }
 
     return response
@@ -203,6 +203,24 @@ export const update = async (event,product) => {
 }
 
 
+const findAll = async (event) => {
+  try {
+    const products = await db.Product.findAll()
+
+    const response = {
+      error: false,
+      msg: 'Products Found',
+      data: products.map(p => p.dataValues)
+    }
+    return response
+
+  } catch (error) {
+    console.log(error)
+    return getInternalErrorResponse()
+  }
+}
+
+
 
 
 export default {
@@ -211,5 +229,6 @@ export default {
   findByCode,
   findByName,
   destroy,
-  update
+  update,
+  findAll
 }

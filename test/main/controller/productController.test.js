@@ -9,7 +9,15 @@ describe('Product controller', () => {
     let validCode = null
     let idProductNotExists = null
 
-    const { findById, create, findByCode, findByName, destroy, update } = productController
+    const {
+        findById,
+        create,
+        findByCode,
+        findByName,
+        destroy,
+        update,
+        findAll
+    } = productController
 
 
     beforeAll(async () => {
@@ -261,38 +269,55 @@ describe('Product controller', () => {
         })
 
         it("should update a invalid product", async () => {
-          const {data:productCreated} =  await create(null,productValid)
+            const { data: productCreated } = await create(null, productValid)
 
-          productCreated.name = '' // invalid name
-          const response = await update(null,productCreated)
+            productCreated.name = '' // invalid name
+            const response = await update(null, productCreated)
 
-          const errorReponse = {
-            error:true,
-            msg: "O nome é obrigatório.",
-            data:null
-          }
+            const errorReponse = {
+                error: true,
+                msg: "O nome é obrigatório.",
+                data: null
+            }
 
-          expect(response,errorReponse)
+            expect(response, errorReponse)
         })
 
         it("should update a product that doesn't exist", async () => {
             const { data: productCreated } = await create(null, productValid)
-            const {error} = await destroy(null,productCreated.id)
+            const { error } = await destroy(null, productCreated.id)
 
             expect(error).toBe(false)
-            
+
             productValid.id = productCreated.id
 
-            const response = await update(null,productValid)
-            
+            const response = await update(null, productValid)
+
             const errorResponse = {
-                error:true,
-                msg:"Não existe Produto com esse id",
-                data:null
+                error: true,
+                msg: "Não existe Produto com esse id",
+                data: null
             }
 
             expect(response).toEqual(errorResponse)
         })
 
+    })
+
+    describe("findAll()", () => {
+
+        it("should found products", async () => {
+            const {data:productCreated} = await create(null,productValid)
+            const response = await findAll()
+            
+            const sucessReponse = {
+                error:false,
+                msg:'Products Found',
+                data:[productCreated]
+            }
+
+            expect(response).toEqual(sucessReponse)
+
+        })
     })
 })
