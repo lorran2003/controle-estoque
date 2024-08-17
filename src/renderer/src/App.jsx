@@ -11,7 +11,7 @@ export function App() {
         return <Home setRenderPage={setRenderPage} />
 
       case 'product':
-        return <Product setRenderPage={setRenderPage} />
+        return <Product backHomePage={setRenderPage} />
     }
   }
 
