@@ -79,15 +79,17 @@ const stockValidation = Joi.number()
     })
 
 
+const productValidation = Joi.object({
+    name:nameValidation,
+    code:codeValidation,
+    img:imgValidation,
+    priceSale:priceSaleValidation,
+    priceCost:priceCostValidation,
+    stock:stockValidation,
+})
+
 export const createProductValidator = (productData) => {
-   return Joi.object({
-        name:nameValidation,
-        code:codeValidation,
-        img:imgValidation,
-        priceSale:priceSaleValidation,
-        priceCost:priceCostValidation,
-        stock:stockValidation,
-    }).validate(productData)
+   return productValidation.validate(productData)
 } 
 
 
@@ -106,4 +108,8 @@ export const findByNameValidator = (name) => {
 
 export const destroyValidator = (id) => {
     return idValidation.validate(id)
+}
+
+export const updateValidator = (product) => {
+    return productValidation.keys({id:idValidation}).validate(product)
 }

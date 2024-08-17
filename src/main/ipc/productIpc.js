@@ -8,6 +8,7 @@ const setupProductIpc = () => {
     ipcMain.handle('findByCode-product',productController.findByCode)
     ipcMain.handle('findByName-product',productController.findByName)
     ipcMain.handle('delete-product',productController.destroy)
+    ipcMain.handle('update-product',productController.update)
 }
 
 

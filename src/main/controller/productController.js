@@ -1,5 +1,5 @@
 import db from "../database/db.js"
-import { createProductValidator, destroyValidator, findByCodeValidator, findByIdValidator, findByNameValidator } from "../validator/productValidator.js"
+import { createProductValidator, destroyValidator, findByCodeValidator, findByIdValidator, findByNameValidator, updateValidator } from "../validator/productValidator.js"
 import CustomError from "../util/CustomError.js"
 import { Op } from '@sequelize/core';
 
@@ -169,6 +169,39 @@ export const destroy = async (event,id) => {
   }
 }
 
+export const update = async (event,product) => {
+  try {
+    const {error,value:productValid} = updateValidator(product)
+
+    if (error) {
+      throw new CustomError(error.message)
+    }
+
+    const productFound = await db.Product.findByPk(productValid.id)
+
+    if (!productFound) {
+      throw new CustomError("Não existe Produto com esse id")
+    }
+
+    await productFound.update(productValid)
+    
+    const response = {
+      error:false,
+      msg:"Produto atualizado com sucesso",
+      data:productFound.dataValues
+    }
+
+    return response
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return getCustomErrorResponse(error)
+    }
+
+    console.log(error)
+    return getInternalErrorResponse()
+  }
+}
+
 
 
 
@@ -177,5 +210,6 @@ export default {
   findById,
   findByCode,
   findByName,
-  destroy
+  destroy,
+  update
 }

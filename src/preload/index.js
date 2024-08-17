@@ -8,7 +8,8 @@ const productApi = {
   findById: (id) => ipcRenderer.invoke('findById-product',id),
   findByCode:(code) => ipcRenderer.invoke('findByCode-product',code),
   findByName:(name) => ipcRenderer.invoke('findByName-product',name),
-  delete:(id) => ipcRenderer.invoke('delete-product',id)
+  delete:(id) => ipcRenderer.invoke('delete-product',id),
+  update:(product) => ipcRenderer.invoke('update-product',product)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

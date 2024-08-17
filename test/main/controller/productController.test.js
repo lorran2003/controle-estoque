@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import db from "../../../src/main/database/db";
 import productController from "../../../src/main/controller/productController";
 
@@ -9,7 +9,7 @@ describe('Product controller', () => {
     let validCode = null
     let idProductNotExists = null
 
-    const { findById, create, findByCode, findByName, destroy } = productController
+    const { findById, create, findByCode, findByName, destroy, update } = productController
 
 
     beforeAll(async () => {
@@ -194,12 +194,12 @@ describe('Product controller', () => {
 
         it("should destroy product", async () => {
             const { data: productCreated } = await create(null, productValid)
-            
-            const { data: productRemoved,msg } = await destroy(null,productCreated.id)
+
+            const { data: productRemoved, msg } = await destroy(null, productCreated.id)
 
             expect(productCreated).toEqual(productRemoved)
-           
-            const response = await findById(null,productCreated.id)
+
+            const response = await findById(null, productCreated.id)
 
 
             const errorReponse = {
@@ -211,9 +211,9 @@ describe('Product controller', () => {
             expect(response).toEqual(errorReponse)
         })
 
-        it("should destroy a products with invalid id",async () => {
+        it("should destroy a products with invalid id", async () => {
             const idInvalid = -999
-            const response = await destroy(null,idInvalid)
+            const response = await destroy(null, idInvalid)
 
             const errorReponse = {
                 error: true,
@@ -227,7 +227,7 @@ describe('Product controller', () => {
 
         it("should destroy a product that doesn't exist", async () => {
 
-            const response = await destroy(null,idProductNotExists)
+            const response = await destroy(null, idProductNotExists)
 
             const errorReponse = {
                 error: true,
@@ -237,5 +237,62 @@ describe('Product controller', () => {
 
             expect(response).toEqual(errorReponse)
         })
+    })
+
+
+    describe("update()", () => {
+
+        it("should update product", async () => {
+            const { data: productCreated } = await create(null, productValid)
+
+            const previousProduct = { ...productCreated }
+
+            productValid.id = productCreated.id
+            productValid.name = "new name"
+            productValid.code = "BBB123"
+            productValid.stock = 100
+            productValid.priceSale = 200
+            productValid.priceCost = 100
+
+            const { data: productUpdated } = await update(null, productValid)
+
+            expect(productUpdated).toMatchObject(productValid)
+            expect(productUpdated).not.toEqual(previousProduct)
+        })
+
+        it("should update a invalid product", async () => {
+          const {data:productCreated} =  await create(null,productValid)
+
+          productCreated.name = '' // invalid name
+          const response = await update(null,productCreated)
+
+          const errorReponse = {
+            error:true,
+            msg: "O nome é obrigatório.",
+            data:null
+          }
+
+          expect(response,errorReponse)
+        })
+
+        it("should update a product that doesn't exist", async () => {
+            const { data: productCreated } = await create(null, productValid)
+            const {error} = await destroy(null,productCreated.id)
+
+            expect(error).toBe(false)
+            
+            productValid.id = productCreated.id
+
+            const response = await update(null,productValid)
+            
+            const errorResponse = {
+                error:true,
+                msg:"Não existe Produto com esse id",
+                data:null
+            }
+
+            expect(response).toEqual(errorResponse)
+        })
+
     })
 })
