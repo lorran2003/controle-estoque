@@ -222,7 +222,6 @@ const findAll = async (event) => {
 
 
 
-
 export default {
   create,
   findById,

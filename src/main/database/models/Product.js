@@ -31,7 +31,11 @@ const ProductModel = (sequelize) => {
             type:DataTypes.INTEGER,
             allowNull:false
         },
-        stock:{
+        currentStock:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        },
+        minimumStock:{
             type:DataTypes.INTEGER,
             allowNull:false
         }

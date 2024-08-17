@@ -47,7 +47,7 @@ const imgValidation = Joi.string()
 
 const priceSaleValidation = Joi.number()
     .integer()
-    .min(0)
+    .min(1)
     .required()
     .messages({
         'number.base': 'O preço de venda deve ser um número.',
@@ -58,7 +58,7 @@ const priceSaleValidation = Joi.number()
 
 const priceCostValidation = Joi.number()
     .integer()
-    .min(0)
+    .min(1)
     .required()
     .messages({
         'number.base': 'O preço de custo deve ser um número.',
@@ -69,7 +69,7 @@ const priceCostValidation = Joi.number()
 
 const stockValidation = Joi.number()
     .integer()
-    .min(0)
+    .min(1)
     .required()
     .messages({
         'number.base': 'O estoque deve ser um número.',
@@ -85,7 +85,8 @@ const productValidation = Joi.object({
     img:imgValidation,
     priceSale:priceSaleValidation,
     priceCost:priceCostValidation,
-    stock:stockValidation,
+    currentStock:stockValidation,
+    minimumStock:stockValidation,
 })
 
 export const createProductValidator = (productData) => {

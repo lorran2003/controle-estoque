@@ -35,7 +35,8 @@ describe('Product controller', () => {
             img: 'test/path',
             priceSale: 500,
             priceCost: 200,
-            stock: 20
+            currentStock: 20,
+            minimumStock:5,
         }
 
         await db.sequelize.truncate()
@@ -62,7 +63,8 @@ describe('Product controller', () => {
                 img: 'test/path',
                 priceSale: 500,
                 priceCost: 200,
-                stock: 20
+                currentStock:20,
+                minimumStock:10
             }
 
             const response = await create(null, productInvalid)
@@ -258,7 +260,8 @@ describe('Product controller', () => {
             productValid.id = productCreated.id
             productValid.name = "new name"
             productValid.code = "BBB123"
-            productValid.stock = 100
+            productValid.currentStock = 100
+            productValid.minimumStock = 20
             productValid.priceSale = 200
             productValid.priceCost = 100
 
