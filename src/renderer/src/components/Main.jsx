@@ -4,11 +4,7 @@ import iconBox from '../assets/icons/box.svg'
 import iconDropBox from '../assets/icons/dropbox.svg'
 
 export function Main({ homePage }) {
-  ;(async () => {
-    const data = await window.api.getTest()
-    console.log(data)
-  })()
-
+ 
   return (
     <section className="p-10 ">
       <h1 className="pl-10 text-3xl">Atalhos</h1>
