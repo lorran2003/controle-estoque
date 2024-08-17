@@ -3,13 +3,11 @@ import db from "../../../src/main/database/db";
 import productController from "../../../src/main/controller/productController";
 
 
-
-
 describe('Product controller', () => {
     let productValid = null
     let invalidCode = null
     let validCode = null
-    const { findById, create, findByCode } = productController
+    const { findById, create, findByCode, findByName } = productController
 
 
     beforeAll(async () => {
@@ -102,8 +100,6 @@ describe('Product controller', () => {
 
             expect(response).toEqual(errorReponse)
         })
-
-
     })
 
 
@@ -142,6 +138,53 @@ describe('Product controller', () => {
 
             expect(response).toEqual(errorResponse)
         })
+
+    })
+
+
+    describe("findByName()", () => {
+
+        it("should found products", async () => {
+            const {data:productCreated} = await create(null, productValid)
+            const response = await findByName(null, productValid.name)
+
+            const sucessReponse = {
+                error: false,
+                data: [productCreated],
+                msg: 'Products found'
+            }
+
+            expect(response).toEqual(sucessReponse)
+        })
+
+        it("should look for products with invalid name", async () => {
+            const invalidName = 123
+            const response = await findByName(null, invalidName)
+
+
+            const errorResponse = {
+                error: true,
+                data: null,
+                msg: 'O nome deve ser uma string.'
+            }
+
+
+            expect(response).toEqual(errorResponse)
+        })
+
+        it("should look for a products that doesn't exist", async () => {
+            const name = ''
+            const response = await findByName(null, name)
+
+            const sucessReponse = {
+                error: false,
+                data: [],
+                msg: 'Products found'
+            }
+
+            expect(response).toEqual(sucessReponse)
+        })
+
 
     })
 

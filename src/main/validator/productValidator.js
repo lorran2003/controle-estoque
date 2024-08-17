@@ -1,20 +1,25 @@
 import Joi from "joi";
 
-
 const idValidation = Joi.number().integer().min(1).required().messages({
     'integer.base':'O id deve ser um numero inteiro',
     'any.required':'O id é obrigatório',
     'number.min':'O valor deve ser maior que 0'
 })
 
+const nameValidationOptional = Joi.string()
+    .max(255)
+    .allow('')
+    .messages({
+        'string.base': 'O nome deve ser uma string.',
+        'string.max': 'O nome deve ter no máximo {#limit} caracteres.'
+    });
+
 const nameValidation = Joi.string()
-    .min(1)
     .max(255)
     .required()
     .messages({
         'string.base': 'O nome deve ser uma string.',
         'string.empty': 'O nome é obrigatório.',
-        'string.min': 'O nome deve ter pelo menos {#limit} caracteres.',
         'string.max': 'O nome deve ter no máximo {#limit} caracteres.',
         'any.required': 'O nome é obrigatório.'
     })
@@ -93,3 +98,7 @@ export const findByCodeValidator = (code)=> {
     return codeValidation.validate(code)
 }
 
+
+export const findByNameValidator = (name) => {
+    return nameValidationOptional.validate(name)
+}

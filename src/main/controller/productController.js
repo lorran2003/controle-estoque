@@ -1,13 +1,20 @@
 import db from "../database/db.js"
-import { createProductValidator, findByCodeValidator, findByIdValidator } from "../validator/productValidator.js"
+import { createProductValidator, findByCodeValidator, findByIdValidator, findByNameValidator } from "../validator/productValidator.js"
 import CustomError from "../util/CustomError.js"
+import { Op } from '@sequelize/core';
+
+const getInternalErrorResponse = () =>
+  ({ error: true, msg: 'Erro Interno', data: null })
+
+const getCustomErrorResponse = (error) =>
+  ({ error: true, msg: error.message, data: null })
 
 
 const create = async (event, productData) => {
   try {
 
     const { error, value: productValid } = createProductValidator(productData)
-
+    
     if (error) {
       throw new CustomError(error.message)
     }
@@ -24,11 +31,11 @@ const create = async (event, productData) => {
   } catch (error) {
 
     if (error instanceof CustomError) {
-      return { error: true, msg: error.message, data: null }
+      return getCustomErrorResponse(error)
     }
 
     console.log(error)
-    return { error: true, msg: 'Erro Interno', data: null }
+    return getInternalErrorResponse()
   }
 }
 
@@ -56,15 +63,15 @@ const findById = async (event, id) => {
   } catch (error) {
 
     if (error instanceof CustomError) {
-      return { error: true, msg: error.message, data: null }
+      return getCustomErrorResponse(error)
     }
 
     console.log(error)
-    return { error: true, msg: 'Erro Interno', data: null }
+    return getInternalErrorResponse()
   }
 }
 
-const findByCode = async (event,code) => {
+const findByCode = async (event, code) => {
   try {
     const { error, value: codeValid } = findByCodeValidator(code)
 
@@ -72,7 +79,7 @@ const findByCode = async (event,code) => {
       throw new CustomError(error.message)
     }
 
-    const productFound = await db.Product.findOne({where:{code:codeValid}})
+    const productFound = await db.Product.findOne({ where: { code: codeValid } })
 
     if (!productFound) {
       throw new CustomError("Não existe Produto com esse código")
@@ -88,12 +95,45 @@ const findByCode = async (event,code) => {
   } catch (error) {
 
     if (error instanceof CustomError) {
-      return { error: true, msg: error.message, data: null }
+      return getCustomErrorResponse(error)
     }
 
     console.log(error)
-    return { error: true, msg: 'Erro Interno', data: null }
+    return getInternalErrorResponse()
   }
+}
+
+
+const findByName = async (event, name) => {
+  try {
+    const { error, value: nameValid } = findByNameValidator(name)
+
+    if (error) {
+      throw new CustomError(error.message)
+    }
+
+    const query = {
+      name: { [Op.like]: nameValid }
+    }
+
+    const products = await db.Product.findAll({ where: query })
+
+    const response = {
+      error: false,
+      msg: 'Products found',
+      data: products.map(p=> p.dataValues)
+    }
+
+    return response
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return getCustomErrorResponse(error)
+    }
+
+    console.log(error)
+    return getInternalErrorResponse()
+  }
+
 }
 
 
@@ -102,5 +142,6 @@ const findByCode = async (event,code) => {
 export default {
   create,
   findById,
-  findByCode
+  findByCode,
+  findByName
 }
