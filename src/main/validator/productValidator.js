@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 const idValidation = Joi.number().integer().min(1).required().messages({
+    'number.base':'o id deve ser um numero inteiro',
     'integer.base':'O id deve ser um numero inteiro',
     'any.required':'O id é obrigatório',
     'number.min':'O valor deve ser maior que 0'
@@ -101,4 +102,8 @@ export const findByCodeValidator = (code)=> {
 
 export const findByNameValidator = (name) => {
     return nameValidationOptional.validate(name)
+}
+
+export const destroyValidator = (id) => {
+    return idValidation.validate(id)
 }

@@ -7,7 +7,9 @@ describe('Product controller', () => {
     let productValid = null
     let invalidCode = null
     let validCode = null
-    const { findById, create, findByCode, findByName } = productController
+    let idProductNotExists = null
+
+    const { findById, create, findByCode, findByName, destroy } = productController
 
 
     beforeAll(async () => {
@@ -17,6 +19,7 @@ describe('Product controller', () => {
     beforeEach(async () => {
         invalidCode = 'AAA12'
         validCode = 'AAA123'
+        idProductNotExists = 999
 
         productValid = {
             name: 'water',
@@ -75,7 +78,6 @@ describe('Product controller', () => {
         })
 
         it("should look for a product that doesn't exist", async () => {
-            const idProductNotExists = 999
             const response = await findById(null, idProductNotExists)
 
 
@@ -145,7 +147,7 @@ describe('Product controller', () => {
     describe("findByName()", () => {
 
         it("should found products", async () => {
-            const {data:productCreated} = await create(null, productValid)
+            const { data: productCreated } = await create(null, productValid)
             const response = await findByName(null, productValid.name)
 
             const sucessReponse = {
@@ -184,9 +186,56 @@ describe('Product controller', () => {
 
             expect(response).toEqual(sucessReponse)
         })
-
-
     })
 
 
+    describe('destroy()', () => {
+
+
+        it("should destroy product", async () => {
+            const { data: productCreated } = await create(null, productValid)
+            
+            const { data: productRemoved,msg } = await destroy(null,productCreated.id)
+
+            expect(productCreated).toEqual(productRemoved)
+           
+            const response = await findById(null,productCreated.id)
+
+
+            const errorReponse = {
+                error: true,
+                data: null,
+                msg: "Não existe Produto com esse id"
+            }
+
+            expect(response).toEqual(errorReponse)
+        })
+
+        it("should destroy a products with invalid id",async () => {
+            const idInvalid = -999
+            const response = await destroy(null,idInvalid)
+
+            const errorReponse = {
+                error: true,
+                data: null,
+                msg: "O valor deve ser maior que 0"
+            }
+
+            expect(response).toEqual(errorReponse)
+        })
+
+
+        it("should destroy a product that doesn't exist", async () => {
+
+            const response = await destroy(null,idProductNotExists)
+
+            const errorReponse = {
+                error: true,
+                data: null,
+                msg: "Não existe Produto com esse id"
+            }
+
+            expect(response).toEqual(errorReponse)
+        })
+    })
 })

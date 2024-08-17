@@ -1,5 +1,5 @@
 import db from "../database/db.js"
-import { createProductValidator, findByCodeValidator, findByIdValidator, findByNameValidator } from "../validator/productValidator.js"
+import { createProductValidator, destroyValidator, findByCodeValidator, findByIdValidator, findByNameValidator } from "../validator/productValidator.js"
 import CustomError from "../util/CustomError.js"
 import { Op } from '@sequelize/core';
 
@@ -14,7 +14,7 @@ const create = async (event, productData) => {
   try {
 
     const { error, value: productValid } = createProductValidator(productData)
-    
+
     if (error) {
       throw new CustomError(error.message)
     }
@@ -121,7 +121,7 @@ const findByName = async (event, name) => {
     const response = {
       error: false,
       msg: 'Products found',
-      data: products.map(p=> p.dataValues)
+      data: products.map(p => p.dataValues)
     }
 
     return response
@@ -136,6 +136,39 @@ const findByName = async (event, name) => {
 
 }
 
+export const destroy = async (event,id) => {
+  try {
+    const { error, value: idValid } = destroyValidator(id)
+
+    if (error) {
+      throw new CustomError(error.message)
+    }
+
+    const productFound = await db.Product.findByPk(idValid)
+
+    if (!productFound) {
+      throw new CustomError("Não existe Produto com esse id")
+    }
+
+    await productFound.destroy()
+
+    const response = {
+      error: false,
+      data: productFound.dataValues,
+      msg: "Produto deletado com sucesso"
+    }
+
+    return response
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return getCustomErrorResponse(error)
+    }
+
+    console.log(error)
+    return getInternalErrorResponse()
+  }
+}
+
 
 
 
@@ -143,5 +176,6 @@ export default {
   create,
   findById,
   findByCode,
-  findByName
+  findByName,
+  destroy
 }
