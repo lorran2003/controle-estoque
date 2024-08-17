@@ -3,7 +3,7 @@ import iconBoxes from '../assets/icons/boxes.svg'
 import iconBox from '../assets/icons/box.svg'
 import iconDropBox from '../assets/icons/dropbox.svg'
 
-export function Main({ setRenderPage }) {
+export function Main({ homePage }) {
   ;(async () => {
     const data = await window.api.getTest()
     console.log(data)
@@ -26,7 +26,7 @@ export function Main({ setRenderPage }) {
               aria-label="cadastrar produto"
               type="button"
               className="bg-[#DAA520] rounded-md p-1 text-zinc-50"
-              onClick={() => setRenderPage('product')}
+              onClick={() => homePage('product')}
             >
               Cadastrar
             </button>

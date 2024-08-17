@@ -22,6 +22,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@sequelize/sqlite3": "^7.0.0-alpha.41",
+    "controle_estoque": "file:",
     "joi": "^17.13.3"
   },
   "devDependencies": {

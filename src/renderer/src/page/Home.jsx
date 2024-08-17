@@ -6,7 +6,7 @@ export function Home({ setRenderPage }) {
   return (
     <section>
       <Header />
-      <Main setRenderPage={setRenderPage} />
+      <Main homePage={setRenderPage} />
     </section>
   )
 }
