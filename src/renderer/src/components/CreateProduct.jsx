@@ -27,20 +27,24 @@ export function CreateProduct({ backPage }) {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
+    console.log(productImage)
+
     const productData = {
-      productName,
-      barcode,
-      currentStock,
-      minimumStock,
-      priceSale,
-      priceCost,
-      productImage,
+      name: productName,
+      code: barcode,
+      img: productImage ? productImage.path : null,
+      currentStock: currentStock,
+      priceSale: priceSale,
+      priceCost: priceCost,
+      currentStock: currentStock,
+      minimumStock: minimumStock
     }
 
-    console.log('Product Data:', productData)
+    const response = await window.productApi.create(productData)
+    console.log(response)
   }
 
   return (
