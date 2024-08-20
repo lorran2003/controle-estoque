@@ -16,7 +16,7 @@ const getCustomErrorResponse = (error) =>
   ({ error: true, msg: error.message, data: null })
 
 const existsProductBy = async (attributes) =>
-  await db.Product.findOne({ where: { ...attributes } })
+   db.Product.findOne({ where: { ...attributes } })
 
 
 const create = async (event, productData) => {
@@ -28,11 +28,11 @@ const create = async (event, productData) => {
       throw new CustomError(error.message)
     }
 
-    if (existsProductBy({name:productValid.name})) {
+    if (await existsProductBy({name:productValid.name})) {
       throw new CustomError('Já existe um produto com esse nome.');
     }
 
-    if (existsProductBy({code:productValid.code})) {
+    if (await existsProductBy({code:productValid.code})) {
       throw new CustomError('Já existe um produto com esse código.');
     }
 
@@ -206,13 +206,13 @@ const update = async (event, product) => {
 
     const isDifferentName = productFound.name !== productValid.name
 
-    if (isDifferentName && existsProductBy({ name: productValid.name })) {
+    if (isDifferentName && await existsProductBy({ name: productValid.name })) {
       throw new CustomError('Já existe um produto com esse nome.');
     }
 
     const isDifferentCode = productFound.code !== productValid.code
 
-    if (isDifferentCode && existsProductBy({ code: productValid.code })) {
+    if (isDifferentCode && await existsProductBy({ code: productValid.code })) {
       throw new CustomError('Já existe um produto com esse código.')
     }
 
