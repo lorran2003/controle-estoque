@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
 import { Link } from 'react-router-dom'
 
@@ -12,6 +12,7 @@ export function CreateProduct() {
   const [priceCost, setpriceCost] = useState(1)
   const [productImage, setProductImage] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0]
@@ -28,20 +29,24 @@ export function CreateProduct() {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
+    console.log(productImage)
+
     const productData = {
-      productName,
-      barcode,
-      currentStock,
-      minimumStock,
-      priceSale,
-      priceCost,
-      productImage
+      name: productName,
+      code: barcode,
+      img: productImage ? productImage.path : null,
+      currentStock: currentStock,
+      priceSale: priceSale,
+      priceCost: priceCost,
+      currentStock: currentStock,
+      minimumStock: minimumStock
     }
 
-    console.log('Product Data:', productData)
+    const response = await window.productApi.create(productData)
+    console.log(response)
   }
 
   return (
@@ -147,6 +152,7 @@ export function CreateProduct() {
           )}
         </div>
 
+          <img src='app:///C:/Users/vinicius/Desktop/controle-estoque/resources/img/banana-1724191578847.jpeg'/>
         <button
           type="submit"
           className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"
