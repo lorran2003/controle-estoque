@@ -8,3 +8,6 @@ body{
 .navHearder{
   text-shadow: 1px 1px rgb(63, 62, 62);
 }
+input:focus{
+  border: 2px #9E895F;
+}

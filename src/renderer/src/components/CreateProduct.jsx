@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
-
-/* eslint-disable react/prop-types */
-export function CreateProduct({ backPage }) {
+import { Link } from 'react-router-dom'
+export function CreateProduct() {
   const [productName, setProductName] = useState('')
   const [barcode, setBarcode] = useState('')
   const [currentStock, setCurrentStock] = useState(1)
@@ -37,7 +36,7 @@ export function CreateProduct({ backPage }) {
       minimumStock,
       priceSale,
       priceCost,
-      productImage,
+      productImage
     }
 
     console.log('Product Data:', productData)
@@ -45,17 +44,15 @@ export function CreateProduct({ backPage }) {
 
   return (
     <section className="py-8 px-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-      <button
-        aria-label="Voltar para a página inicial"
-        type="button"
-        className="flex items-center gap-2 bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-        onClick={() => backPage('products')}
+      <Link
+        to="/home/products"
+        className="flex w-28 items-center gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
       >
         <i>
           <img src={arrowLeft} alt="voltar" width={20} />
         </i>
         Voltar
-      </button>
+      </Link>
 
       <form onSubmit={handleSubmit} className="mt-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Criar ou editar produto</h1>
@@ -69,7 +66,7 @@ export function CreateProduct({ backPage }) {
             maxLength={255}
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
           />
         </div>
 
@@ -81,7 +78,7 @@ export function CreateProduct({ backPage }) {
             placeholder="Digite o código, ex: A1B2C3"
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
           />
         </div>
 
@@ -93,7 +90,7 @@ export function CreateProduct({ backPage }) {
               min={1}
               value={currentStock}
               onChange={(e) => setCurrentStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
             />
           </div>
 
@@ -104,7 +101,7 @@ export function CreateProduct({ backPage }) {
               value={minimumStock}
               min={1}
               onChange={(e) => setMinimumStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
             />
           </div>
         </div>
@@ -116,7 +113,7 @@ export function CreateProduct({ backPage }) {
             type="number"
             value={priceSale}
             onChange={(e) => setpriceSale(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
           />
         </div>
 
@@ -127,7 +124,7 @@ export function CreateProduct({ backPage }) {
             min={1}
             value={priceCost}
             onChange={(e) => setpriceCost(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
           />
         </div>
 
@@ -137,7 +134,7 @@ export function CreateProduct({ backPage }) {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
           />
           {previewImage && (
             <img
@@ -150,7 +147,7 @@ export function CreateProduct({ backPage }) {
 
         <button
           type="submit"
-          className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"
+          className="w-full gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
         >
           Cadastrar Produto
         </button>

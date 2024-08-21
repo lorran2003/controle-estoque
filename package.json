@@ -22,7 +22,8 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@sequelize/sqlite3": "^7.0.0-alpha.41",
-    "joi": "^17.13.3"
+    "joi": "^17.13.3",
+    "react-router-dom": "^6.26.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
