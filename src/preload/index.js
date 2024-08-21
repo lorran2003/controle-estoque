@@ -24,5 +24,5 @@ if (process.contextIsolated) {
   }
 } else {
   window.electron = electronAPI
-  window.api = api
+  window.productApi = api
 }

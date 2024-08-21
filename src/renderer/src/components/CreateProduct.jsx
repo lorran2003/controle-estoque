@@ -33,17 +33,6 @@ export function CreateProduct({ backPage }) {
 
     console.log(productImage)
 
-    const productData = {
-      name: productName,
-      code: barcode,
-      img: productImage ? productImage.path : null,
-      currentStock: currentStock,
-      priceSale: priceSale,
-      priceCost: priceCost,
-      currentStock: currentStock,
-      minimumStock: minimumStock
-    }
-
     const response = await window.productApi.create(productData)
     console.log(response)
   }
@@ -152,8 +141,7 @@ export function CreateProduct({ backPage }) {
             />
           )}
         </div>
-
-          <img src='app:///C:/Users/vinicius/Desktop/controle-estoque/resources/img/banana-1724191578847.jpeg'/>
+        
         <button
           type="submit"
           className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"

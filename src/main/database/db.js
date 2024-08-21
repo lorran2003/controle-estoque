@@ -5,7 +5,7 @@ import { ROOT_DIR } from '../util/path';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite3',
-  storage: path.join(ROOT_DIR,'data','sequelize.sqlite'),
+  storage: path.join(ROOT_DIR,'out','db','sequelize.sqlite'),
 })
 
 const Product = ProductModel(sequelize)

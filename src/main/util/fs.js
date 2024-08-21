@@ -24,7 +24,7 @@ export const copyTo = (srcPath, destDir) => {
 
         fs.copyFileSync(srcPath, destPath)
 
-        return destPath
+        return uniqueName
     } catch (error) {
         if (error instanceof CustomError) {
             throw error
@@ -45,5 +45,13 @@ export const updateImg = (currentImg, nextImg) => {
         fs.copyFileSync(nextImg, currentImg)
     } catch (err) {
         throw new CustomError('Erro ao atualizar imagem!');
+    }
+}
+
+export const deleteImg = (path) => {
+    try {
+        fs.unlinkSync(path)
+    } catch (err) {
+        throw new CustomError("Erro ao deletar Imagem do produto")
     }
 }

@@ -63,8 +63,8 @@ db.sequelize.sync({ force: true }).then(() => {
 
     //setup protocol
     protocol.handle('app', (request) => {
-      const filePath = request.url.slice('app://'.length+1)
-      return net.fetch(url.pathToFileURL(path.resolve(filePath)).toString())
+      const filePath = request.url.slice('app://'.length)
+      return net.fetch(url.pathToFileURL(path.join(ROOT_DIR,'resources','img',filePath)).toString())
     })
     // setup listeners
     setupProductIpc()
