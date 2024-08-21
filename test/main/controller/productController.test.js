@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import db from "../../../src/main/database/db";
 import productController from "../../../src/main/controller/productController";
-
+import path from 'path'
 
 describe('Product controller', () => {
     let productValid = null

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
 import { Link } from 'react-router-dom'
+
+/* eslint-disable react/prop-types */
 export function CreateProduct() {
   const [productName, setProductName] = useState('')
   const [barcode, setBarcode] = useState('')
@@ -66,7 +68,7 @@ export function CreateProduct() {
             maxLength={255}
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
@@ -78,7 +80,7 @@ export function CreateProduct() {
             placeholder="Digite o código, ex: A1B2C3"
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
@@ -90,7 +92,7 @@ export function CreateProduct() {
               min={1}
               value={currentStock}
               onChange={(e) => setCurrentStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
 
@@ -101,7 +103,7 @@ export function CreateProduct() {
               value={minimumStock}
               min={1}
               onChange={(e) => setMinimumStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
         </div>
@@ -113,7 +115,7 @@ export function CreateProduct() {
             type="number"
             value={priceSale}
             onChange={(e) => setpriceSale(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
@@ -124,7 +126,7 @@ export function CreateProduct() {
             min={1}
             value={priceCost}
             onChange={(e) => setpriceCost(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
@@ -134,7 +136,7 @@ export function CreateProduct() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E895F]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           {previewImage && (
             <img
@@ -147,7 +149,7 @@ export function CreateProduct() {
 
         <button
           type="submit"
-          className="w-full gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
+          className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"
         >
           Cadastrar Produto
         </button>
