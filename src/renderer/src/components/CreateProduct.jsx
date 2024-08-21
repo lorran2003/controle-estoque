@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
 
 /* eslint-disable react/prop-types */
@@ -11,6 +11,7 @@ export function CreateProduct({ backPage }) {
   const [priceCost, setpriceCost] = useState(1)
   const [productImage, setProductImage] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0]
@@ -152,6 +153,7 @@ export function CreateProduct({ backPage }) {
           )}
         </div>
 
+          <img src='app:///C:/Users/vinicius/Desktop/controle-estoque/resources/img/banana-1724191578847.jpeg'/>
         <button
           type="submit"
           className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"

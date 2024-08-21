@@ -1,7 +1,6 @@
 import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-
 // Custom APIs for renderer
 const productApi = {
   create: (product) => ipcRenderer.invoke('create-product',product) ,
@@ -10,7 +9,7 @@ const productApi = {
   findByName:(name) => ipcRenderer.invoke('findByName-product',name),
   delete:(id) => ipcRenderer.invoke('delete-product',id),
   update:(product) => ipcRenderer.invoke('update-product',product),
-  findAll:() => ipcRenderer.invoke('findAll-product')
+  findAll:() => ipcRenderer.invoke('findAll-product'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

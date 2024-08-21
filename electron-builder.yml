@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: controle-story
+productName: controle-estoque
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: controle-story
+  executableName: controle-estoque
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
