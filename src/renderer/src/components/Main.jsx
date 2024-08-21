@@ -2,9 +2,8 @@
 import iconBoxes from '../assets/icons/boxes.svg'
 import iconBox from '../assets/icons/box.svg'
 import iconDropBox from '../assets/icons/dropbox.svg'
-
-export function Main({ homePage }) {
- 
+import { Link } from 'react-router-dom'
+export function Main() {
   return (
     <section className="p-10 ">
       <h1 className="pl-10 text-3xl">Atalhos</h1>
@@ -18,14 +17,9 @@ export function Main({ homePage }) {
 
             <h2 className="py-4">Cadastro de produtos</h2>
 
-            <button
-              aria-label="cadastrar produto"
-              type="button"
-              className="bg-[#DAA520] rounded-md p-1 text-zinc-50"
-              onClick={() => homePage('product')}
-            >
+            <Link to="/home/products" className="bg-[#DAA520] rounded-md p-1 text-zinc-50">
               Cadastrar
-            </button>
+            </Link>
           </div>
         </div>
 

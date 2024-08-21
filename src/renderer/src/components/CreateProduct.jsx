@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
+import { Link } from 'react-router-dom'
 
 /* eslint-disable react/prop-types */
-export function CreateProduct({ backPage }) {
+export function CreateProduct() {
   const [productName, setProductName] = useState('')
   const [barcode, setBarcode] = useState('')
   const [currentStock, setCurrentStock] = useState(1)
@@ -39,17 +40,15 @@ export function CreateProduct({ backPage }) {
 
   return (
     <section className="py-8 px-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-      <button
-        aria-label="Voltar para a página inicial"
-        type="button"
-        className="flex items-center gap-2 bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-        onClick={() => backPage('products')}
+      <Link
+        to="/home/products"
+        className="flex w-28 items-center gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
       >
         <i>
           <img src={arrowLeft} alt="voltar" width={20} />
         </i>
         Voltar
-      </button>
+      </Link>
 
       <form onSubmit={handleSubmit} className="mt-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Criar ou editar produto</h1>
