@@ -1,10 +1,10 @@
 import Joi from "joi";
 
 const idValidation = Joi.number().integer().min(1).required().messages({
-    'number.base':'o id deve ser um numero inteiro',
-    'integer.base':'O id deve ser um numero inteiro',
-    'any.required':'O id é obrigatório',
-    'number.min':'O valor deve ser maior que 0'
+    'number.base': 'O id deve ser um numero inteiro',
+    'number.integer': 'O id deve ser um numero inteiro',
+    'number.min': 'O valor deve ser maior que 0',
+    'any.required': 'O id é obrigatório',
 })
 
 const nameValidationOptional = Joi.string()
@@ -37,8 +37,8 @@ const codeValidation = Joi.string()
     })
 
 const imgValidation = Joi.string()
-    .allow(null)  
-    .optional()   
+    .allow(null)
+    .optional()
     .messages({
         'string.base': 'A imagem deve ser uma string.',
         'any.allowNull': 'A imagem pode ser null.',
@@ -47,7 +47,7 @@ const imgValidation = Joi.string()
 
 const priceSaleValidation = Joi.number()
     .integer()
-    .min(1)
+    .min(0)
     .required()
     .messages({
         'number.base': 'O preço de venda deve ser um número.',
@@ -58,7 +58,7 @@ const priceSaleValidation = Joi.number()
 
 const priceCostValidation = Joi.number()
     .integer()
-    .min(1)
+    .min(0)
     .required()
     .messages({
         'number.base': 'O preço de custo deve ser um número.',
@@ -67,38 +67,50 @@ const priceCostValidation = Joi.number()
         'any.required': 'O preço de custo é obrigatório.'
     })
 
-const stockValidation = Joi.number()
+
+const currentStockValidation = Joi.number()
     .integer()
-    .min(1)
+    .min(0)
     .required()
     .messages({
-        'number.base': 'O estoque deve ser um número.',
-        'number.integer': 'O estoque deve ser um número inteiro.',
-        'number.min': 'O estoque deve ser maior ou igual a {#limit}.',
-        'any.required': 'O estoque é obrigatório.'
+        'number.base': 'O estoque atual deve ser um número.',
+        'number.integer': 'O estoque atual deve ser um número inteiro.',
+        'number.min': 'O estoque atual deve ser maior ou igual a {#limit}.',
+        'any.required': 'O estoque atual é obrigatório.'
     })
 
 
+const minimumStockValidation = Joi.number()
+    .integer()
+    .min(0)
+    .required()
+    .messages({
+        'number.base': 'O estoque minimo deve ser um número.',
+        'number.integer': 'O estoque minimo deve ser um número inteiro.',
+        'number.min': 'O estoque minimo deve ser maior ou igual a {#limit}.',
+        'any.required': 'O estoque minimo é obrigatório.'
+    })
+
 const productValidation = Joi.object({
-    name:nameValidation,
-    code:codeValidation,
-    img:imgValidation,
-    priceSale:priceSaleValidation,
-    priceCost:priceCostValidation,
-    currentStock:stockValidation,
-    minimumStock:stockValidation,
+    name: nameValidation,
+    code: codeValidation,
+    img: imgValidation,
+    priceSale: priceSaleValidation,
+    priceCost: priceCostValidation,
+    currentStock: currentStockValidation,
+    minimumStock: minimumStockValidation,
 })
 
 export const createProductValidator = (productData) => {
-   return productValidation.validate(productData)
-} 
+    return productValidation.validate(productData)
+}
 
 
 export const findByIdValidator = (id) => {
     return idValidation.validate(id)
 }
 
-export const findByCodeValidator = (code)=> {
+export const findByCodeValidator = (code) => {
     return codeValidation.validate(code)
 }
 
@@ -112,5 +124,17 @@ export const destroyValidator = (id) => {
 }
 
 export const updateValidator = (product) => {
-    return productValidation.keys({id:idValidation}).validate(product)
+    return productValidation.keys({ id: idValidation }).validate(product)
+}
+
+export default {
+    idValidation,
+    codeValidation,
+    nameValidation,
+    priceSaleValidation,
+    priceCostValidation,
+    nameValidationOptional,
+    currentStockValidation,
+    minimumStockValidation,
+    imgValidation
 }
