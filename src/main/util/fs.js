@@ -38,12 +38,24 @@ export const copyTo = (srcPath, destDir) => {
 
 export const updateImg = (currentImg, nextImg) => {
     try {
+
         if (!isExistsFile(nextImg)) {
             throw new CustomError('Arquivo de origem não existe')
         }
+        
         fs.unlinkSync(currentImg)
-        fs.copyFileSync(nextImg, currentImg)
+        const currentFileName = path.basename(currentImg)
+        const currentExtName = path.extname(currentFileName)
+
+        const nextExtName = path.extname(nextImg)
+        const updatedNameFile = currentFileName.replace(currentExtName, nextExtName)
+
+        const updatedPath = currentImg.replace(currentFileName, updatedNameFile)
+        fs.copyFileSync(nextImg, updatedPath)
     } catch (err) {
+        if(err instanceof CustomError){
+            throw err
+        }
         throw new CustomError('Erro ao atualizar imagem!');
     }
 }
