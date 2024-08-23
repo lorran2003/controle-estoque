@@ -1,13 +1,19 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import db from "../../../src/main/database/db";
 import productController from "../../../src/main/controller/productController";
 import path from 'path'
+import fs from 'fs/promises'
+import { ROOT_DIR } from "../../../src/main/util/path";
+
 
 describe('Product controller', () => {
     let productValid = null
     let invalidCode = null
     let validCode = null
     let idProductNotExists = null
+    let pathImg = null
+    let updatePathImg = null
+    let otherProductValid = null 
 
     const {
         findById,
@@ -19,6 +25,14 @@ describe('Product controller', () => {
         findAll
     } = productController
 
+    afterAll(async () => {
+        const destPath = path.join(ROOT_DIR, 'resources', 'img')
+        const files = await fs.readdir(path.join(ROOT_DIR, 'resources', 'img'))
+
+        files.forEach(async (file) => {
+            await fs.unlink(path.join(destPath, file))
+        })
+    })
 
     beforeAll(async () => {
         await db.sequelize.sync({ force: true })
@@ -29,15 +43,21 @@ describe('Product controller', () => {
         validCode = 'AAA123'
         idProductNotExists = 999
 
+        pathImg = path.join(__dirname, '..', '..', 'img', 'banana.jpeg')
+        updatePathImg = path.join(__dirname, '..', '..', 'img', 'water.jpg')
+
         productValid = {
             name: 'water',
             code: validCode,
-            img: 'test/path',
+            img: pathImg,
             priceSale: 500,
             priceCost: 200,
             currentStock: 20,
-            minimumStock:5,
+            minimumStock: 5,
         }
+
+
+        otherProductValid = {...productValid,name:'potato',code:'CCCCCC'}
 
         await db.sequelize.truncate()
     })
@@ -45,15 +65,43 @@ describe('Product controller', () => {
     describe('create()', () => {
 
         it('should create product', async () => {
+            const { img: removedImg, ...attributes } = productValid
+
             const sucessReponse = {
                 error: false,
                 msg: 'Produto Criado com Sucesso',
-                data: productValid
+                data: attributes
             }
 
             const response = await create(null, productValid)
 
             expect(response).toMatchObject(sucessReponse)
+        })
+
+        it('should throw an error if a product with the same name already exists', async () => {
+            await create(null, productValid)
+            const response = await create(null, { ...productValid, code: 'CCCCCC' })
+
+            const errorReponse = {
+                error: true,
+                data: null,
+                msg: 'Já existe um produto com esse nome.'
+            }
+
+            expect(errorReponse).toEqual(response)
+        });
+
+        it("should throw an error if a product with the same code already exists", async () => {
+            await create(null, productValid)
+            const response = await create(null, { ...productValid, name: 'New name' })
+
+            const errorReponse = {
+                error: true,
+                data: null,
+                msg: 'Já existe um produto com esse código.'
+            }
+
+            expect(errorReponse).toEqual(response)
         })
 
         it("shouldn't create a product", async () => {
@@ -63,8 +111,8 @@ describe('Product controller', () => {
                 img: 'test/path',
                 priceSale: 500,
                 priceCost: 200,
-                currentStock:20,
-                minimumStock:10
+                currentStock: 20,
+                minimumStock: 10
             }
 
             const response = await create(null, productInvalid)
@@ -255,8 +303,6 @@ describe('Product controller', () => {
         it("should update product", async () => {
             const { data: productCreated } = await create(null, productValid)
 
-            const previousProduct = { ...productCreated }
-
             productValid.id = productCreated.id
             productValid.name = "new name"
             productValid.code = "BBB123"
@@ -264,11 +310,19 @@ describe('Product controller', () => {
             productValid.minimumStock = 20
             productValid.priceSale = 200
             productValid.priceCost = 100
+            productValid.img = updatePathImg
 
-            const { data: productUpdated } = await update(null, productValid)
+            const response = await update(null, productValid)
 
-            expect(productUpdated).toMatchObject(productValid)
-            expect(productUpdated).not.toEqual(previousProduct)
+            delete productValid.img
+
+            const sucessReponse = {
+                error: false,
+                msg: "Produto atualizado com sucesso",
+                data: productValid
+            }
+
+            expect(response).toMatchObject(sucessReponse)
         })
 
         it("should update a invalid product", async () => {
@@ -284,6 +338,42 @@ describe('Product controller', () => {
             }
 
             expect(response, errorReponse)
+        })
+
+        it("shouldn't update a product with existing name", async () => {
+            const { data: productCreated } = await create(null, productValid)
+            const { data: productCreated2 } = await create(null, otherProductValid)
+
+            productValid.id = productCreated.id
+            productValid.name = productCreated2.name
+    
+            const response = await update(null, productValid)
+
+            const errorResponse = {
+                error: true,
+                msg: 'Já existe um produto com esse nome.',
+                data: null
+            }
+            expect(response).toEqual(errorResponse)
+        });
+
+        it("shouldn't update a product with existing code", async () => {
+            const { data: productCreated } = await create(null, productValid)
+            const { data: productCreated2 } = await create(null,otherProductValid)
+
+            productValid.id = productCreated.id
+            productValid.code = productCreated2.code
+    
+            const response = await update(null, productValid)
+
+            const errorResponse = {
+                error: true,
+                msg: 'Já existe um produto com esse código.',
+                data: null
+            }
+            expect(response).toEqual(errorResponse)
+
+
         })
 
         it("should update a product that doesn't exist", async () => {
@@ -310,13 +400,13 @@ describe('Product controller', () => {
     describe("findAll()", () => {
 
         it("should found products", async () => {
-            const {data:productCreated} = await create(null,productValid)
+            const { data: productCreated } = await create(null, productValid)
             const response = await findAll()
-            
+
             const sucessReponse = {
-                error:false,
-                msg:'Products Found',
-                data:[productCreated]
+                error: false,
+                msg: 'Products Found',
+                data: [productCreated]
             }
 
             expect(response).toEqual(sucessReponse)

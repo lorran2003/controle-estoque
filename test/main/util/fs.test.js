@@ -46,7 +46,8 @@ describe("fs", () => {
         it("should update the image", () => {
             const uniqueName = copyTo(pathImg, destImg)
             const currentPathImg = path.join(destImg, uniqueName)
-            expect(() => updateImg(currentPathImg, updatePathImg)).not.toThrow()
+            const updatedNameFile = updateImg(currentPathImg, updatePathImg)
+            expect(path.extname(updatedNameFile)).toBe(path.extname(updatePathImg))
         })
 
         it("should update the image not exists", () => {

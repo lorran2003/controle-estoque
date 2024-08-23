@@ -52,6 +52,7 @@ export const updateImg = (currentImg, nextImg) => {
 
         const updatedPath = currentImg.replace(currentFileName, updatedNameFile)
         fs.copyFileSync(nextImg, updatedPath)
+        return updatedNameFile
     } catch (err) {
         if(err instanceof CustomError){
             throw err

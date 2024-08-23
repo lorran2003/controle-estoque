@@ -2,21 +2,17 @@ import db from "../database/db.js"
 import { createProductValidator, destroyValidator, findByCodeValidator, findByIdValidator, findByNameValidator, updateValidator } from "../validator/productValidator.js"
 import CustomError from "../util/CustomError.js"
 import { Op } from '@sequelize/core';
-import { copyTo, deleteImg, updateImg } from "../util/fs.js";
+import { copyTo, deleteImg} from "../util/fs.js";
 import path from 'path'
-import { ROOT_DIR } from "../util/path.js";
+import { validateProductNameChange, validateProductCodeChange, handleProductImageUpdate, existsProductBy } from "../util/productHelper.js";
+import { DEST_DIR } from "../util/path.js";
 
-
-const DEST_DIR = path.join(ROOT_DIR, 'resources', 'img')
 
 const getInternalErrorResponse = () =>
   ({ error: true, msg: 'Erro Interno', data: null })
 
 const getCustomErrorResponse = (error) =>
   ({ error: true, msg: error.message, data: null })
-
-const existsProductBy = async (attributes) =>
-  db.Product.findOne({ where: { ...attributes } })
 
 
 const create = async (event, productData) => {
@@ -196,51 +192,27 @@ export const destroy = async (event, id) => {
   }
 }
 
-const update = async (event, product) => {
+const update = async (event, productData) => {
   try {
-    const { error, value: productValid } = updateValidator(product);
+    const { error, value: productValid } = updateValidator(productData)
 
-    if (error) {
-      throw new CustomError(error.message);
-    }
+    if (error) throw new CustomError(error.message)
 
-    const productFound = await db.Product.findByPk(productValid.id);
+    const existingProduct = await db.Product.findByPk(productValid.id)
 
-    if (!productFound) {
-      throw new CustomError("Não existe Produto com esse id")
-    }
+    if (!existingProduct) throw new CustomError("Não existe Produto com esse id")
 
-    const isDifferentName = productFound.name !== productValid.name
+    await validateProductNameChange(existingProduct, productValid)
+    await validateProductCodeChange(existingProduct, productValid)
 
-    if (isDifferentName && await existsProductBy({ name: productValid.name })) {
-      throw new CustomError('Já existe um produto com esse nome.')
-    }
+    productValid.img = handleProductImageUpdate(existingProduct, productValid)
 
-    const isDifferentCode = productFound.code !== productValid.code
-
-    if (isDifferentCode && await existsProductBy({ code: productValid.code })) {
-      throw new CustomError('Já existe um produto com esse código.')
-    }
-
-    const isExistsImgProductValid = Boolean(productValid.img)
-
-    if (!isExistsImgProductValid && productFound.img) {
-      deleteImg(path.join(DEST_DIR, productFound.img))
-    } 
-
-    const imgProductValid = path.basename(productValid.img)
-    console.log(imgProductValid)
-
-    if (isExistsImgProductValid && productFound.img !== imgProductValid) {
-      updateImg(path.join(DEST_DIR, productFound.img),productValid.img)
-    }
-
-    await productFound.update(productValid)
+    await existingProduct.update(productValid)
 
     const response = {
       error: false,
       msg: "Produto atualizado com sucesso",
-      data: productFound.dataValues,
+      data: existingProduct.dataValues,
     }
 
     return response
@@ -249,11 +221,10 @@ const update = async (event, product) => {
       return getCustomErrorResponse(error)
     }
 
-    console.log(error)
+    console.log(error);
     return getInternalErrorResponse()
   }
-};
-
+}
 
 const findAll = async (event) => {
   try {
