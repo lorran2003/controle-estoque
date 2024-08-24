@@ -43,7 +43,7 @@ export const updateImg = (currentImg, nextImg) => {
         }
 
         if (!isExistsFile(currentImg)) {
-            return copyTo(nextImg)
+            return copyTo(nextImg,DEST_IMG)
         }
 
         fs.unlinkSync(currentImg)
