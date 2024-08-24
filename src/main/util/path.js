@@ -1,17 +1,9 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { app } from 'electron';
+import path from 'path'
 
+const picturesPath = app.getPath('pictures')
+const userPath = app.getPath('userData')
 
-export const __filename = fileURLToPath(import.meta.url)
+export const DEST_USER = userPath
+export const DEST_IMG = path.join(picturesPath,'controle-estoque')
 
-export const __dirname = path.dirname(__filename)
-
-
-const isTestEnv = process.env.TEST_ENV === 'true'
-
-
-export const ROOT_DIR = isTestEnv
-    ? path.resolve(__dirname, '../../../')
-    : path.resolve(__dirname, '../../')
-
-export const DEST_DIR = path.join(ROOT_DIR, 'resources', 'img')

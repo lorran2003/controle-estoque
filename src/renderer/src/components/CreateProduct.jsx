@@ -13,26 +13,32 @@ export function CreateProduct() {
   const [productImage, setProductImage] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
 
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0]
-    if (file) {
-      setProductImage(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreviewImage(reader.result)
+  useEffect(()=> {
+    const getProduct = async () => {
+      const response = await window.productApi.findById(1)
+      console.log(response)
+      if(!response.error){
+        setPreviewImage(response.data.img)
       }
-      reader.readAsDataURL(file)
-    } else {
-      setProductImage(null)
-      setPreviewImage(null)
     }
-  }
+
+    getProduct()
+  },[])
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    console.log(productImage)
+    const productData  = {
+      code:barcode,
+      name:productName,
+      img:productImage,
+      minimumStock,
+      currentStock,
+      priceSale,
+      priceCost
+    }
 
     const response = await window.productApi.create(productData)
     console.log(response)
@@ -129,12 +135,15 @@ export function CreateProduct() {
           <input
             type="file"
             accept="image/*"
-            onChange={handleImageChange}
+            onChange={((e) => {
+              console.log(e.target.files[0].path)
+              setProductImage(e.target.files[0].path)
+            })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           {previewImage && (
             <img
-              src={previewImage}
+              src={'app://'+previewImage}
               alt="Pré-visualização do produto"
               className="mt-4 max-h-48 rounded-md shadow-md"
             />

@@ -1,11 +1,11 @@
 import { Sequelize } from '@sequelize/core';
 import ProductModel from './models/Product';
-import path from 'path';
-import { ROOT_DIR } from '../util/path';
+import path from 'path'
+import { DEST_USER } from '../util/path';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite3',
-  storage: path.join(ROOT_DIR,'out','db','sequelize.sqlite'),
+  storage: path.join(DEST_USER,'db','sequelize.sqlite') ,
 })
 
 const Product = ProductModel(sequelize)

@@ -1,6 +1,6 @@
 import db from "../database/db"
 import path from 'path'
-import {DEST_DIR} from "./path"
+import {DEST_IMG} from "./path"
 import { updateImg } from "./fs"
 import CustomError from "./CustomError"
 
@@ -26,7 +26,7 @@ export const validateProductCodeChange = async (existingProduct, validatedProduc
 
 export const handleProductImageUpdate = (existingProduct, validatedProductData) => {
     const isImageProvided = Boolean(validatedProductData.img)
-    const currentImagePath = path.join(DEST_DIR, existingProduct.img)
+    const currentImagePath = path.join(DEST_IMG, existingProduct.img)
 
     if (!isImageProvided && existingProduct.img) {
         deleteImg(currentImagePath)
