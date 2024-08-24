@@ -26,8 +26,8 @@ describe('Product controller', () => {
     } = productController
 
     afterAll(async () => {
-        const destPath = path.join(ROOT_DIR, 'resources', 'img')
-        const files = await fs.readdir(path.join(ROOT_DIR, 'resources', 'img'))
+        const destPath = path.join(ROOT_DIR,'resources', 'img')
+        const files = await fs.readdir(destPath)
 
         files.forEach(async (file) => {
             await fs.unlink(path.join(destPath, file))
