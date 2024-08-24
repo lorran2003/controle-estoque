@@ -2,7 +2,7 @@ import db from "../database/db.js"
 import { createProductValidator, destroyValidator, findByCodeValidator, findByIdValidator, findByNameValidator, updateValidator } from "../validator/productValidator.js"
 import CustomError from "../util/CustomError.js"
 import { Op } from '@sequelize/core';
-import {copyToDestImg, deleteImg} from "../util/fs.js";
+import {copyTo, deleteImg} from "../util/fs.js";
 import path from 'path'
 import { validateProductNameChange, validateProductCodeChange, handleProductImageUpdate, existsProductBy } from "../util/productHelper.js";
 import { DEST_IMG } from "../util/path.js";
@@ -34,7 +34,7 @@ const create = async (event, productData) => {
 
     if (productValid.img) {
       const path = productValid.img
-      const destPath = copyToDestImg(path, DEST_IMG)
+      const destPath = copyTo(path, DEST_IMG)
       productValid.img = destPath
     }
 

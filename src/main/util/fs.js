@@ -7,30 +7,30 @@ export const isExistsFile = (path) => {
     return fs.existsSync(path)
 }
 
-export const copyToDestImg = (srcPath) => {
+export const copyTo = (srcPath, destPath) => {
     try {
         if (!isExistsFile(srcPath)) {
             throw new CustomError('Arquivo de origem não existe')
         }
 
-        if (!isExistsFile(DEST_IMG)) {
-            fs.mkdirSync(DEST_IMG, { recursive: true })
+        if (!isExistsFile(destPath)) {
+            fs.mkdirSync(destPath, { recursive: true })
         }
 
         const fileName = path.basename(srcPath)
         const ext = path.extname(fileName)
         const baseName = path.basename(fileName, ext)
         const uniqueName = `${baseName}-${Date.now()}${ext}`
-        const destPath = path.join(DEST_IMG, uniqueName)
+        const destFinalPath = path.join(destPath, uniqueName)
 
-        fs.copyFileSync(srcPath, destPath)
+        fs.copyFileSync(srcPath, destFinalPath)
 
         return uniqueName
     } catch (error) {
         if (error instanceof CustomError) {
             throw error
         }
-        throw new CustomError('Erro ao salvar imagem!',error)
+        throw new CustomError('Erro ao salvar imagem!', error)
     }
 
 }
@@ -43,9 +43,9 @@ export const updateImg = (currentImg, nextImg) => {
         }
 
         if (!isExistsFile(currentImg)) {
-           return copyTo(nextImg)
+            return copyTo(nextImg)
         }
-        
+
         fs.unlinkSync(currentImg)
         const currentFileName = path.basename(currentImg)
         const currentExtName = path.extname(currentFileName)
@@ -57,16 +57,16 @@ export const updateImg = (currentImg, nextImg) => {
         fs.copyFileSync(nextImg, updatedPath)
         return updatedNameFile
     } catch (err) {
-        if(err instanceof CustomError){
+        if (err instanceof CustomError) {
             throw err
         }
         throw new CustomError('Erro ao atualizar imagem!');
     }
 }
 
-export const deleteImg = (fileName) => {
+export const deleteImg = (pathImg) => {
     try {
-        fs.unlinkSync(path.join(DEST_IMG,fileName))
+        fs.unlinkSync(pathImg)
     } catch (err) {
         throw new CustomError("Erro ao deletar Imagem do produto")
     }

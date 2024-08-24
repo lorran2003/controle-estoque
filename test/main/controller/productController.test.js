@@ -3,7 +3,7 @@ import db from "../../../src/main/database/db";
 import productController from "../../../src/main/controller/productController";
 import path from 'path'
 import fs from 'fs/promises'
-import { ROOT_DIR } from "../../../src/main/util/path";
+import { DEST_IMG } from "../../../src/main/util/path";
 
 
 describe('Product controller', () => {
@@ -26,11 +26,10 @@ describe('Product controller', () => {
     } = productController
 
     afterAll(async () => {
-        const destPath = path.join(ROOT_DIR,'resources', 'img')
-        const files = await fs.readdir(destPath)
+        const files = await fs.readdir(DEST_IMG)
 
         files.forEach(async (file) => {
-            await fs.unlink(path.join(destPath, file))
+            await fs.unlink(path.join(DEST_IMG, file))
         })
     })
 
