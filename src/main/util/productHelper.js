@@ -13,40 +13,26 @@ export const isExistsFile = (path) => {
 }
 
 export const saveImg = (pathImg) => {
-    try {
-        if (!isExistsFile(pathImg)) {
-            throw new CustomError('Arquivo de origem não existe')
-        }
-
-        const fileName = path.basename(pathImg)
-        const ext = path.extname(fileName)
-        const baseName = path.basename(fileName, ext)
-        const uniqueName = `${baseName}-${Date.now()}${ext}`
-        const finalPath = path.join(DEST_IMG, uniqueName)
-
-        fs.copyFileSync(pathImg, finalPath)
-
-        return uniqueName
-    } catch (error) {
-        if (error instanceof CustomError) {
-            throw error
-        }
-        console.log(error)
-        throw new CustomError('Erro ao salvar imagem!')
+    if (!isExistsFile(pathImg)) {
+        throw new CustomError('Arquivo de origem não existe')
     }
+
+    const fileName = path.basename(pathImg)
+    const ext = path.extname(fileName)
+    const baseName = path.basename(fileName, ext)
+    const uniqueName = `${baseName}-${Date.now()}${ext}`
+    const finalPath = path.join(DEST_IMG, uniqueName)
+
+    fs.copyFileSync(pathImg, finalPath)
+
+    return uniqueName
 }
 
 export const deleteImg = (filename) => {
-    try {
-        const pathImg = path.join(DEST_IMG, filename)
+    const pathImg = path.join(DEST_IMG, filename)
 
-        if (isExistsFile(pathImg)) {
-            fs.unlinkSync(pathImg)
-        }
-
-    } catch (error) {
-        console.log(error)
-        throw new CustomError("Erro ao deletar Imagem do produto")
+    if (isExistsFile(pathImg)) {
+        fs.unlinkSync(pathImg)
     }
 }
 
