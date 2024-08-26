@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ErrorTypes } from '../../../shared/errorTypes'
-/* eslint-disable react/prop-types */
-export function CreateProduct() {
+
+export function EditProduct() {
   const [productName, setProductName] = useState('')
   const [barcode, setBarcode] = useState('')
   const [currentStock, setCurrentStock] = useState(1)
@@ -16,10 +15,7 @@ export function CreateProduct() {
   useEffect(() => {
     const getProduct = async () => {
       const response = await window.productApi.findById(1)
-      if (response.type === ErrorTypes.CUSTOM) {
-        console.log(response.msg)
-      }
-
+      console.log(response)
       if (!response.error) {
         setPreviewImage(response.data.img)
       }
@@ -42,7 +38,7 @@ export function CreateProduct() {
     }
 
     const response = await window.productApi.create(productData)
-    console.log(response.msg)
+    console.log(response)
   }
 
   return (
@@ -58,7 +54,7 @@ export function CreateProduct() {
       </Link>
 
       <form onSubmit={handleSubmit} className="mt-6">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Criar produto</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Editar produto</h1>
 
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Nome do produto</label>
