@@ -1,8 +1,5 @@
-
-
 export default class CustomError extends Error{
-    constructor(message,originalError){
+    constructor(message){
         super(message)
-        this.originalError = originalError
     }
 }

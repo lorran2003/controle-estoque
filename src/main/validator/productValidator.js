@@ -33,6 +33,7 @@ const codeValidation = Joi.string()
         'string.base': 'O código deve ser uma string.',
         'string.length': 'O código deve ter exatamente {#limit} caracteres.',
         'string.pattern.base': 'O código deve conter apenas letras maiúsculas e números.',
+        'string.empty': 'O código é obrigatório.',
         'any.required': 'O código é obrigatório.'
     })
 

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import db from "../../../src/main/database/db";
-import productController from "../../../src/main/controller/productController";
+import { findById, create, findByCode, findByName, destroy, update, findAll } from "../../../src/main/business/productBusiness";
 import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
@@ -13,17 +13,8 @@ describe('Product controller', () => {
     let idProductNotExists = null
     let pathImg = null
     let updatePathImg = null
-    let otherProductValid = null 
+    let otherProductValid = null
 
-    const {
-        findById,
-        create,
-        findByCode,
-        findByName,
-        destroy,
-        update,
-        findAll
-    } = productController
 
     afterAll(async () => {
         const files = await fs.readdir(DEST_IMG)
@@ -56,7 +47,7 @@ describe('Product controller', () => {
         }
 
 
-        otherProductValid = {...productValid,name:'potato',code:'CCCCCC'}
+        otherProductValid = { ...productValid, name: 'potato', code: 'CCCCCC' }
 
         await db.sequelize.truncate()
     })
@@ -84,7 +75,8 @@ describe('Product controller', () => {
             const errorReponse = {
                 error: true,
                 data: null,
-                msg: 'Já existe um produto com esse nome.'
+                msg: 'Já existe um produto com esse nome.',
+    
             }
 
             expect(errorReponse).toEqual(response)
@@ -97,7 +89,8 @@ describe('Product controller', () => {
             const errorReponse = {
                 error: true,
                 data: null,
-                msg: 'Já existe um produto com esse código.'
+                msg: 'Já existe um produto com esse código.',
+    
             }
 
             expect(errorReponse).toEqual(response)
@@ -119,7 +112,8 @@ describe('Product controller', () => {
             const errorReponse = {
                 error: true,
                 data: null,
-                msg: 'O código deve ter exatamente 6 caracteres.'
+                msg: 'O código deve ter exatamente 6 caracteres.',
+    
             }
             expect(response).toEqual(errorReponse)
         })
@@ -141,7 +135,8 @@ describe('Product controller', () => {
             const errorReponse = {
                 error: true,
                 msg: "Não existe Produto com esse id",
-                data: null
+                data: null,
+    
             }
 
             expect(response).toEqual(errorReponse)
@@ -154,7 +149,8 @@ describe('Product controller', () => {
             const errorReponse = {
                 error: true,
                 msg: "O valor deve ser maior que 0",
-                data: null
+                data: null,
+    
             }
 
             expect(response).toEqual(errorReponse)
@@ -179,7 +175,8 @@ describe('Product controller', () => {
             const errorResponse = {
                 error: true,
                 msg: 'O código deve ter exatamente 6 caracteres.',
-                data: null
+                data: null,
+    
             }
 
             expect(response).toEqual(errorResponse)
@@ -192,7 +189,8 @@ describe('Product controller', () => {
             const errorResponse = {
                 error: true,
                 msg: 'Não existe Produto com esse código',
-                data: null
+                data: null,
+    
             }
 
             expect(response).toEqual(errorResponse)
@@ -320,7 +318,7 @@ describe('Product controller', () => {
                 msg: "Produto atualizado com sucesso",
                 data: productValid
             }
-
+            
             expect(response).toMatchObject(sucessReponse)
         })
 
@@ -345,7 +343,7 @@ describe('Product controller', () => {
 
             productValid.id = productCreated.id
             productValid.name = productCreated2.name
-    
+
             const response = await update(null, productValid)
 
             const errorResponse = {
@@ -358,11 +356,11 @@ describe('Product controller', () => {
 
         it("shouldn't update a product with existing code", async () => {
             const { data: productCreated } = await create(null, productValid)
-            const { data: productCreated2 } = await create(null,otherProductValid)
+            const { data: productCreated2 } = await create(null, otherProductValid)
 
             productValid.id = productCreated.id
             productValid.code = productCreated2.code
-    
+
             const response = await update(null, productValid)
 
             const errorResponse = {
@@ -404,7 +402,7 @@ describe('Product controller', () => {
 
             const sucessReponse = {
                 error: false,
-                msg: 'Products Found',
+                msg: 'Produtos Encontrados!',
                 data: [productCreated]
             }
 

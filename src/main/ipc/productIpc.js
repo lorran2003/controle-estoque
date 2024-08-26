@@ -1,15 +1,16 @@
+import { create, findById, findByName, findByCode, update, destroy, findAll } from "../business/productBusiness";
+import handleError from "../util/handleError";
 import { ipcMain } from "electron";
-import productController from "../controller/productController";
 
 
 const setupProductIpc = () => {
-    ipcMain.handle('create-product',productController.create)
-    ipcMain.handle('findById-product',productController.findById)
-    ipcMain.handle('findByCode-product',productController.findByCode)
-    ipcMain.handle('findByName-product',productController.findByName)
-    ipcMain.handle('delete-product',productController.destroy)
-    ipcMain.handle('update-product',productController.update)
-    ipcMain.handle('findAll-product',productController.findAll)
+    ipcMain.handle('create-product', handleError(create))
+    ipcMain.handle('findById-product', handleError(findById))
+    ipcMain.handle('findByCode-product', handleError(findByCode))
+    ipcMain.handle('findByName-product', handleError(findByName))
+    ipcMain.handle('delete-product', handleError(destroy))
+    ipcMain.handle('update-product', handleError(update))
+    ipcMain.handle('findAll-product', handleError(findAll))
 }
 
 
