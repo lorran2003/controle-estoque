@@ -59,14 +59,13 @@ export function Login() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          aria-label="Visualizare produto"
+        <Link
+          to="/home"
           className="bg-zinc-50 shadow-md border-2 border-[#9E895F] text-[#9E895F] rounded-md w-28 m-auto text-xl p-2 hover:bg-zinc-800 hover:-translate-y-1 duration-300"
           onClick={() => setOverFlow(true)}
         >
-          <Link to="/home">Entrar </Link>
-        </button>
+          Entrar
+        </Link>
       </div>
     </section>
   )

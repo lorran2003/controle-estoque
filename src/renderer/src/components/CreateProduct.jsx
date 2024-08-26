@@ -13,27 +13,25 @@ export function CreateProduct() {
   const [productImage, setProductImage] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
 
-  useEffect(()=> {
+  useEffect(() => {
     const getProduct = async () => {
       const response = await window.productApi.findById(1)
       console.log(response)
-      if(!response.error){
+      if (!response.error) {
         setPreviewImage(response.data.img)
       }
     }
 
     getProduct()
-  },[])
-
-
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const productData  = {
-      code:barcode,
-      name:productName,
-      img:productImage,
+    const productData = {
+      code: barcode,
+      name: productName,
+      img: productImage,
       minimumStock,
       currentStock,
       priceSale,
@@ -143,13 +141,13 @@ export function CreateProduct() {
           />
           {previewImage && (
             <img
-              src={'app://'+previewImage}
+              src={'app://' + previewImage}
               alt="Pré-visualização do produto"
               className="mt-4 max-h-48 rounded-md shadow-md"
             />
           )}
         </div>
-        
+
         <button
           type="submit"
           className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"

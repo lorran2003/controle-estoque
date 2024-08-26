@@ -17,7 +17,10 @@ export function Main() {
 
             <h2 className="py-4">Cadastro de produtos</h2>
 
-            <Link to="/home/products" className="bg-[#DAA520] rounded-md p-1 text-zinc-50">
+            <Link
+              to="/home/products"
+              className="bg-[#DAA520] rounded-md p-1 text-zinc-50 hover:shadow-inner hover:shadow-black duration-300"
+            >
               Cadastrar
             </Link>
           </div>
