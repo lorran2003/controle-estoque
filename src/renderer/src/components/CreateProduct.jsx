@@ -16,10 +16,10 @@ export function CreateProduct() {
   useEffect(() => {
     const getProduct = async () => {
       const response = await window.productApi.findById(1)
-      if(response.type === ErrorTypes.CUSTOM){
+      if (response.type === ErrorTypes.CUSTOM) {
         console.log(response.msg)
       }
-      
+
       if (!response.error) {
         setPreviewImage(response.data.img)
       }
@@ -27,8 +27,6 @@ export function CreateProduct() {
 
     getProduct()
   }, [])
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault()
