@@ -1,25 +1,32 @@
-import CustomError from "./CustomError"
+import CustomError from './CustomError'
+import { ErrorTypes } from '../../shared/errorTypes'
 
-const getInternalErrorResponse = () =>
-    ({ error: true, msg: 'Erro Interno', data: null })
+const getErrorResponse = (type, message) => ({
+    error: true,
+    type,
+    msg: message,
+    data: null
+})
 
-const getCustomErrorResponse = ({ message }) =>
-    ({ error: true, msg: message, data: null })
+const getSuccessResponse = (data) => ({
+    error: false,
+    msg: 'Operação realizada com sucesso',
+    data
+})
 
 const handleError = (func) => {
-
     return async (...params) => {
         try {
-            return await func(...params)
+            const result = await func(...params)
+            return getSuccessResponse(result)
         } catch (error) {
             if (error instanceof CustomError) {
-                return getCustomErrorResponse(error)
+                return getErrorResponse(ErrorTypes.CUSTOM, error.message)
             }
 
-            console.log(error)
-            return getInternalErrorResponse()
+            return getErrorResponse(ErrorTypes.INTERNAL, error.message)
         }
     }
 }
 
-export default  handleError
+export default handleError
