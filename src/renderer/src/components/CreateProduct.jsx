@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import arrowLeft from '../assets/icons/arrow-left.svg'
 import { Link } from 'react-router-dom'
-
+import { ErrorTypes } from '../../../shared/errorTypes'
 /* eslint-disable react/prop-types */
 export function CreateProduct() {
   const [productName, setProductName] = useState('')
@@ -16,7 +16,10 @@ export function CreateProduct() {
   useEffect(() => {
     const getProduct = async () => {
       const response = await window.productApi.findById(1)
-      console.log(response)
+      if(response.type === ErrorTypes.CUSTOM){
+        console.log(response.msg)
+      }
+      
       if (!response.error) {
         setPreviewImage(response.data.img)
       }
@@ -24,6 +27,8 @@ export function CreateProduct() {
 
     getProduct()
   }, [])
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -39,7 +44,7 @@ export function CreateProduct() {
     }
 
     const response = await window.productApi.create(productData)
-    console.log(response)
+    console.log(response.msg)
   }
 
   return (
