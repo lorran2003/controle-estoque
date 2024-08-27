@@ -1,4 +1,4 @@
-import { DataTypes } from '@sequelize/core';
+import { DataTypes } from "sequelize"
 
 const StockMovementModel = (sequelize) => {
   const StockMovement = sequelize.define('StockMovement', {
@@ -26,9 +26,11 @@ const StockMovementModel = (sequelize) => {
     })
 
     StockMovement.associate = (models) => {
-        const Product = models.get('Product')
-        StockMovement.belongsTo(Product,{ foreignKey: 'productId' })
+        const Product = models.Product
+        StockMovement.belongsTo(Product,{ foreignKey: 'productId',onDelete:'CASCADE'})
     }
+
+    return StockMovement
 }
 
 export default StockMovementModel

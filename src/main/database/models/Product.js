@@ -1,4 +1,4 @@
-import { DataTypes } from '@sequelize/core';
+import { DataTypes } from "sequelize"
 
 const ProductModel = (sequelize) => {
     const Product = sequelize.define('Product', {
@@ -42,9 +42,11 @@ const ProductModel = (sequelize) => {
     })
 
     Product.associate = (models) => {
-        const StockMovement = models.get('StockMovement')
+        const StockMovement = models.StockMovement
         Product.hasMany(StockMovement, { foreignKey: 'productId' })
     }
+
+    return Product
 }
 
 export default ProductModel

@@ -4,7 +4,6 @@ import { DEST_IMG } from "./path"
 import CustomError from "./CustomError"
 import fs from 'fs'
 
-
 export const existsProductBy = async (attributes) =>
     db.Product.findOne({ where: { ...attributes } })
 

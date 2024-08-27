@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import db from "../../../src/main/database/db";
-import { findById, create, findByCode, findByName, destroy, update, findAll } from "../../../src/main/business/productBusiness";
+import productBusiness from "../../../src/main/business/productBusiness";
+import stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
 import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
-
 
 describe('Product controller', () => {
     let productValid = null
@@ -14,6 +14,7 @@ describe('Product controller', () => {
     let pathImg = null
     let updatePathImg = null
     let otherProductValid = null
+    let initStock = null
 
 
     afterAll(async () => {
@@ -46,368 +47,175 @@ describe('Product controller', () => {
             minimumStock: 5,
         }
 
+        initStock = {
+            type: "INPUT",
+            priceUnit: productValid.priceCost,
+            quantity: 20,
+            total: productValid.currentStock * productValid.priceCost
+        }
 
         otherProductValid = { ...productValid, name: 'potato', code: 'CCCCCC' }
 
         await db.sequelize.truncate()
     })
 
-    describe('create()', () => {
 
-        it('should create product', async () => {
-            const { img: removedImg, ...attributes } = productValid
+    describe("create()", () => {
 
-            const sucessReponse = {
-                error: false,
-                msg: 'Produto Criado com Sucesso',
-                data: attributes
-            }
-
-            const response = await create(null, productValid)
-
-            expect(response).toMatchObject(sucessReponse)
+        it("should create product", async () => {
+            const product = await productBusiness.create(null, productValid)
+            expect(product).toMatchObject(productValid)
+            const [movement] = await stockMovementBusiness.findByProductId(null, product.id)
+            expect(movement).toMatchObject(initStock)
         })
 
-        it('should throw an error if a product with the same name already exists', async () => {
-            await create(null, productValid)
-            const response = await create(null, { ...productValid, code: 'CCCCCC' })
+        it("should throw an error if a product with the same name already exists", async () => {
+            await productBusiness.create(null, productValid)
 
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: 'Já existe um produto com esse nome.',
-    
-            }
-
-            expect(errorReponse).toEqual(response)
-        });
+            const newProduct = { ...productValid, code: "BBBBBB" }
+            expect(productBusiness.create(null, newProduct))
+                .rejects.toThrow('Já existe um produto com esse nome.')
+        })
 
         it("should throw an error if a product with the same code already exists", async () => {
-            await create(null, productValid)
-            const response = await create(null, { ...productValid, name: 'New name' })
+            await productBusiness.create(null, productValid)
 
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: 'Já existe um produto com esse código.',
-    
-            }
-
-            expect(errorReponse).toEqual(response)
+            const newProduct = { ...productValid, name: "other name" }
+            expect(productBusiness.create(null, newProduct))
+                .rejects.toThrow('Já existe um produto com esse código.')
         })
 
-        it("shouldn't create a product", async () => {
-            const productInvalid = {
-                name: 'water',
-                code: 'AAA12', // invalid code it does not have 6 characters
-                img: 'test/path',
-                priceSale: 500,
-                priceCost: 200,
-                currentStock: 20,
-                minimumStock: 10
-            }
-
-            const response = await create(null, productInvalid)
-
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: 'O código deve ter exatamente 6 caracteres.',
-    
-            }
-            expect(response).toEqual(errorReponse)
-        })
     })
 
-
-    describe('findById()', () => {
-
-        it('should found a product', async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const { data: productFound } = await findById(null, productCreated.id)
-            expect(productCreated).toEqual(productFound)
-        })
-
-        it("should look for a product that doesn't exist", async () => {
-            const response = await findById(null, idProductNotExists)
-
-
-            const errorReponse = {
-                error: true,
-                msg: "Não existe Produto com esse id",
-                data: null,
-    
-            }
-
-            expect(response).toEqual(errorReponse)
-        })
-
-        it("should look for product with invalid ID", async () => {
-            const idInvalid = -100
-            const response = await findById(null, idInvalid)
-
-            const errorReponse = {
-                error: true,
-                msg: "O valor deve ser maior que 0",
-                data: null,
-    
-            }
-
-            expect(response).toEqual(errorReponse)
-        })
-    })
-
-
-    describe('findByCode()', () => {
+    describe("findById()", () => {
 
         it("should found a product", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const code = productCreated.code
-            const { data: productFound } = await findByCode(null, code)
+            const pCreated = await productBusiness.create(null, productValid)
+            const pFound = await productBusiness.findById(null, pCreated.id)
 
-            expect(productCreated).toEqual(productFound)
-        })
-
-        it("should look for product with invalid code", async () => {
-            const response = await findByCode(null, invalidCode)
-
-
-            const errorResponse = {
-                error: true,
-                msg: 'O código deve ter exatamente 6 caracteres.',
-                data: null,
-    
-            }
-
-            expect(response).toEqual(errorResponse)
+            expect(pCreated).toEqual(pFound)
         })
 
         it("should look for a product that doesn't exist", async () => {
-            const response = await findByCode(null, validCode)
-
-
-            const errorResponse = {
-                error: true,
-                msg: 'Não existe Produto com esse código',
-                data: null,
-    
-            }
-
-            expect(response).toEqual(errorResponse)
+            expect(productBusiness.findById(999))
+                .rejects.toThrow("Não existe Produto com esse id")
         })
-
     })
 
+    describe("findByCode()", () => {
+
+        it("should found a product", async () => {
+            const pCreated = await productBusiness.create(null, productValid)
+            const pFound = await productBusiness.findByCode(null, pCreated.code)
+
+            expect(pCreated).toEqual(pFound)
+        })
+
+        it("should look for a product that doesn't exist", async () => {
+            expect(productBusiness.findByCode(null, validCode))
+                .rejects.toThrow("Não existe Produto com esse código")
+        })
+    })
 
     describe("findByName()", () => {
 
         it("should found products", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const response = await findByName(null, productValid.name)
-
-            const sucessReponse = {
-                error: false,
-                data: [productCreated],
-                msg: 'Products found'
-            }
-
-            expect(response).toEqual(sucessReponse)
+            const p1 = await productBusiness.create(null, productValid)
+            const p2 = await productBusiness.create(null, {
+                ...otherProductValid,
+                name: 'water2',
+            })
+            const products = await productBusiness.findByName(null, 'wa')
+            expect(products).toEqual([p1, p2])
         })
 
-        it("should look for products with invalid name", async () => {
-            const invalidName = 123
-            const response = await findByName(null, invalidName)
-
-
-            const errorResponse = {
-                error: true,
-                data: null,
-                msg: 'O nome deve ser uma string.'
-            }
-
-
-            expect(response).toEqual(errorResponse)
-        })
-
-        it("should look for a products that doesn't exist", async () => {
-            const name = ''
-            const response = await findByName(null, name)
-
-            const sucessReponse = {
-                error: false,
-                data: [],
-                msg: 'Products found'
-            }
-
-            expect(response).toEqual(sucessReponse)
+        it("should look for a product that doesn't exist", async () => {
+            expect(productBusiness.findByName(null, '')).resolves.toEqual([])
         })
     })
 
 
-    describe('destroy()', () => {
-
-
+    describe("destroy()", () => {
         it("should destroy product", async () => {
-            const { data: productCreated } = await create(null, productValid)
+            const { id } = await productBusiness.create(null, productValid)
+            const productFound = await productBusiness.findById(null, id)
 
-            const { data: productRemoved, msg } = await destroy(null, productCreated.id)
+            expect(productFound).toMatchObject(productValid)
 
-            expect(productCreated).toEqual(productRemoved)
+            expect(stockMovementBusiness.findByProductId(null,id))
+            .resolves.length(1)
 
-            const response = await findById(null, productCreated.id)
+            await productBusiness.destroy(null, id)
 
+            expect(productBusiness.findById(null, id))
+                .rejects.toThrow("Não existe Produto com esse id")
 
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: "Não existe Produto com esse id"
-            }
-
-            expect(response).toEqual(errorReponse)
+            expect(stockMovementBusiness.findByProductId(null,id))
+            .resolves.toEqual([])
         })
 
-        it("should destroy a products with invalid id", async () => {
-            const idInvalid = -999
-            const response = await destroy(null, idInvalid)
-
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: "O valor deve ser maior que 0"
-            }
-
-            expect(response).toEqual(errorReponse)
-        })
-
-
-        it("should destroy a product that doesn't exist", async () => {
-
-            const response = await destroy(null, idProductNotExists)
-
-            const errorReponse = {
-                error: true,
-                data: null,
-                msg: "Não existe Produto com esse id"
-            }
-
-            expect(response).toEqual(errorReponse)
+        it("should destroy a products with invalid id", () => {
+            expect(productBusiness.destroy(null, 999))
+                .rejects.toThrow("Não existe Produto com esse id")
         })
     })
-
 
     describe("update()", () => {
-
         it("should update product", async () => {
-            const { data: productCreated } = await create(null, productValid)
+            const { id } = await productBusiness.create(null, productValid)
 
-            productValid.id = productCreated.id
-            productValid.name = "new name"
-            productValid.code = "BBB123"
-            productValid.currentStock = 100
-            productValid.minimumStock = 20
-            productValid.priceSale = 200
-            productValid.priceCost = 100
             productValid.img = updatePathImg
+            productValid.currentStock = 100
+            const productToUpate = { ...productValid, id }
 
-            const response = await update(null, productValid)
+            const productUpdated = await productBusiness.update(null, productToUpate)
 
-            delete productValid.img
+            expect(productUpdated).toMatchObject(productToUpate)
+            const movements = await stockMovementBusiness.findByProductId(null, id)
 
-            const sucessReponse = {
-                error: false,
-                msg: "Produto atualizado com sucesso",
-                data: productValid
-            }
-            
-            expect(response).toMatchObject(sucessReponse)
-        })
-
-        it("should update a invalid product", async () => {
-            const { data: productCreated } = await create(null, productValid)
-
-            productCreated.name = '' // invalid name
-            const response = await update(null, productCreated)
-
-            const errorReponse = {
-                error: true,
-                msg: "O nome é obrigatório.",
-                data: null
+            const adjustStock = {
+                type: "ADJUSTMENT",
+                quantity: 80,
+                priceUnit: productValid.priceCost,
+                total: productValid.priceCost * 80
             }
 
-            expect(response, errorReponse)
-        })
-
-        it("shouldn't update a product with existing name", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const { data: productCreated2 } = await create(null, otherProductValid)
-
-            productValid.id = productCreated.id
-            productValid.name = productCreated2.name
-
-            const response = await update(null, productValid)
-
-            const errorResponse = {
-                error: true,
-                msg: 'Já existe um produto com esse nome.',
-                data: null
-            }
-            expect(response).toEqual(errorResponse)
-        });
-
-        it("shouldn't update a product with existing code", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const { data: productCreated2 } = await create(null, otherProductValid)
-
-            productValid.id = productCreated.id
-            productValid.code = productCreated2.code
-
-            const response = await update(null, productValid)
-
-            const errorResponse = {
-                error: true,
-                msg: 'Já existe um produto com esse código.',
-                data: null
-            }
-            expect(response).toEqual(errorResponse)
-
-
+            expect(movements[0]).toMatchObject(initStock)
+            expect(movements[1]).toMatchObject(adjustStock)
         })
 
         it("should update a product that doesn't exist", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const { error } = await destroy(null, productCreated.id)
-
-            expect(error).toBe(false)
-
-            productValid.id = productCreated.id
-
-            const response = await update(null, productValid)
-
-            const errorResponse = {
-                error: true,
-                msg: "Não existe Produto com esse id",
-                data: null
-            }
-
-            expect(response).toEqual(errorResponse)
+            expect(productBusiness.update(null, { id: 999 }))
+                .rejects.toThrow("Não existe Produto com esse id")
         })
 
+        it("shouldn't update a product with existing name", async () => {
+            await productBusiness.create(null, productValid)
+            const pCreated = await productBusiness.create(null, otherProductValid)
+
+            pCreated.name = productValid.name
+
+            expect(productBusiness.update(null, pCreated))
+                .rejects.toThrow("Já existe um produto com esse nome.")
+        })
+
+        it("shouldn't update a product with existing code", async () => {
+            await productBusiness.create(null, productValid)
+            const pCreated = await productBusiness.create(null, otherProductValid)
+
+            pCreated.code = productValid.code
+
+            expect(productBusiness.update(null, pCreated))
+                .rejects.toThrow("Já existe um produto com esse código.")
+        })
     })
 
     describe("findAll()", () => {
-
         it("should found products", async () => {
-            const { data: productCreated } = await create(null, productValid)
-            const response = await findAll()
-
-            const sucessReponse = {
-                error: false,
-                msg: 'Produtos Encontrados!',
-                data: [productCreated]
-            }
-
-            expect(response).toEqual(sucessReponse)
-
+            expect(productBusiness.findAll()).resolves.toEqual([])
+            const p1 = await productBusiness.create(null, productValid)
+            const p2 = await productBusiness.create(null, otherProductValid)
+            expect(productBusiness.findAll()).resolves.toEqual([p1, p2])
         })
     })
 })
