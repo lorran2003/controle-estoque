@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import db from "../../../src/main/database/db";
-import productBusiness from "../../../src/main/business/productBusiness";
-import stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
+import * as productBusiness from "../../../src/main/business/productBusiness";
+import * as stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
 import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
@@ -142,16 +142,16 @@ describe('Product controller', () => {
 
             expect(productFound).toMatchObject(productValid)
 
-            expect(stockMovementBusiness.findByProductId(null,id))
-            .resolves.length(1)
+            expect(stockMovementBusiness.findByProductId(null, id))
+                .resolves.length(1)
 
             await productBusiness.destroy(null, id)
 
             expect(productBusiness.findById(null, id))
                 .rejects.toThrow("Não existe Produto com esse id")
 
-            expect(stockMovementBusiness.findByProductId(null,id))
-            .resolves.toEqual([])
+            expect(stockMovementBusiness.findByProductId(null, id))
+                .resolves.toEqual([])
         })
 
         it("should destroy a products with invalid id", () => {

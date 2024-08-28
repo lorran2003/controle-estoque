@@ -79,7 +79,6 @@ export const destroy = async (event, id) => {
   }
 
   deleteImg(productFound.img)
-
   await productFound.destroy()
 
   return productFound.dataValues
@@ -91,7 +90,7 @@ export const update = async (event, productData) => {
   if (!existingProduct) {
     throw new CustomError("Não existe Produto com esse id")
   }
-  
+
   const isNameChanged = existingProduct.name !== productData.name
   const isCodeChanged = existingProduct.code !== productData.code
 
@@ -100,7 +99,6 @@ export const update = async (event, productData) => {
   }
 
   if (isCodeChanged && await existsProductBy({ code: productData.code })) {
-    console.log('nem sei se rodei')
     throw new CustomError('Já existe um produto com esse código.')
   }
 
@@ -117,7 +115,7 @@ export const update = async (event, productData) => {
     if (adjustQty !== 0) {
 
       const adjustStock = {
-        productId:productData.id,
+        productId: productData.id,
         type: 'ADJUSTMENT',
         quantity: adjustQty,
         priceUnit: productData.priceCost,
@@ -126,7 +124,7 @@ export const update = async (event, productData) => {
 
       await db.StockMovement.create(adjustStock, { transaction })
     }
-    
+
     await transaction.commit()
     return existingProduct.dataValues
   } catch (error) {
@@ -139,14 +137,4 @@ export const update = async (event, productData) => {
 export const findAll = async (event) => {
   const products = await db.Product.findAll()
   return products.map(p => p.dataValues)
-}
-
-export default {
-  create,
-  findAll,
-  findById,
-  findByName,
-  update,
-  destroy,
-  findByCode
 }

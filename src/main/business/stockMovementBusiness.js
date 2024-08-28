@@ -147,12 +147,3 @@ export const findByDateRange = async (event, startDate, endDate, page = 1, limit
     })
     return stockMovements.map(sm => sm.dataValues)
 }
-
-export default {
-    create,
-    findById,
-    findByProductId,
-    update, destroy,
-    findAll,
-    findByDateRange
-}

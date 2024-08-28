@@ -1,12 +1,12 @@
-import { afterAll, describe, expect, it } from "vitest";
-import { isExistsFile } from "../../../src/main/util/productHelper";
+import { afterAll, describe, expect, it, vi } from "vitest";
+import * as productHelper from "../../../src/main/util/productHelper";
 import fs from 'fs/promises'
 import path from 'path'
 import { DEST_IMG } from "../../../src/main/util/path";
 
 describe("Product Helper", () => {
-    const pathImg = path.join(__dirname,'..','..','img','banana.jpeg')
-    const updatePathImg =path.join(__dirname,'..','..','img','water.jpg')
+    const pathImg = path.join(__dirname, '..', '..', 'img', 'banana.jpeg')
+    const updatePathImg = path.join(__dirname, '..', '..', 'img', 'water.jpg')
 
 
     afterAll(async () => {
@@ -19,13 +19,29 @@ describe("Product Helper", () => {
     describe("isExistsFile()", () => {
 
         it("should check file that doesn't exist", () => {
-            expect(isExistsFile()).toBe(false)
+            expect(productHelper.isExistsFile()).toBe(false)
         })
 
         it("should check file that exists", () => {
-            expect(isExistsFile(pathImg)).toBe(true)
+            expect(productHelper.isExistsFile(pathImg)).toBe(true)
         })
     })
 
+    describe("saveImg()", () => {
+        it("should save a img", async () => {
+            const uniqueName = productHelper.saveImg(pathImg)
+            expect(uniqueName).toBeDefined()
+        })
 
+        it("should throw error if path not exists", async () => {
+            expect(productHelper.saveImg).toThrow('Arquivo de origem não existe')
+        })
+    })
+
+    describe("deleteImg()", () => {
+        it("should delete img", async () => {
+            const uniqueName = productHelper.saveImg(pathImg)
+            expect(() => productHelper.deleteImg(uniqueName)).not.toThrow()
+        })
+    })
 })
