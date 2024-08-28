@@ -29,7 +29,6 @@ export const saveImg = (pathImg) => {
 
 export const deleteImg = (filename) => {
     const pathImg = path.join(DEST_IMG, filename)
-
     if (isExistsFile(pathImg)) {
         fs.unlinkSync(pathImg)
     }
@@ -40,8 +39,6 @@ export const updateImg = (currentFilename, nextImgPath) => {
     const newFilename = saveImg(nextImgPath)
     return newFilename
 }
-
-
 
 export const handleProductImageUpdate = (existingProduct, validatedProductData) => {
     const isImageProvided = Boolean(validatedProductData.img)
