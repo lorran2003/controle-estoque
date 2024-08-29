@@ -2,6 +2,7 @@ import { handleProductImageUpdate, existsProductBy, deleteImg, saveImg } from ".
 import CustomError from "../util/CustomError.js"
 import db from "../database/db.js"
 import { Op } from "sequelize"
+import { StockCategory, Stocktypes } from "../../shared/stockEnums.js"
 
 export const create = async (event, productData) => {
   const transaction = await db.sequelize.transaction()
@@ -25,11 +26,13 @@ export const create = async (event, productData) => {
     if (productData.currentStock > 0) {
 
       const initStockMovement = {
-        type: 'INPUT',
+        type: Stocktypes.INPUT,
         quantity: productCreated.currentStock,
         priceUnit: productCreated.priceCost,
         total: productCreated.currentStock * productCreated.priceCost,
-        productId: productCreated.id
+        category: StockCategory.INITIAL_STOCK,
+        description: "ESTOQUE INICIAL",
+        productId: productCreated.id,
       }
 
       await db.StockMovement.create(initStockMovement, { transaction })
@@ -107,19 +110,20 @@ export const update = async (event, productData) => {
   productData.img = newFilename
 
   try {
-    const currentStock = existingProduct.currentStock
-    const newStock = productData.currentStock
-    const adjustQty = newStock - currentStock
 
+    const adjustQty = productData.currentStock - existingProduct.currentStock
+   
     await existingProduct.update(productData, { transaction })
     if (adjustQty !== 0) {
 
       const adjustStock = {
         productId: productData.id,
-        type: 'ADJUSTMENT',
-        quantity: adjustQty,
+        type: adjustQty > 0 ? Stocktypes.INPUT : Stocktypes.OUTPUT,
+        category: StockCategory.ADJUSTMENT,
+        quantity: Math.abs(adjustQty),
+        description: "Ajuste de quantidade manual",
         priceUnit: productData.priceCost,
-        total: productData.priceCost * adjustQty
+        total: productData.priceCost *  Math.abs(adjustQty)
       }
 
       await db.StockMovement.create(adjustStock, { transaction })

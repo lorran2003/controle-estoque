@@ -8,8 +8,16 @@ const StockMovementModel = (sequelize) => {
             primaryKey: true
         },
         type: {
-            type: DataTypes.ENUM('INPUT', 'OUTPUT', 'ADJUSTMENT'),
+            type: DataTypes.ENUM('INPUT', 'OUTPUT'),
             allowNull: false
+        },
+        category:{
+            type: DataTypes.ENUM('INVENTORY', 'ADJUSTMENT','INITIAL_STOCK'),
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         quantity: {
             type: DataTypes.INTEGER,

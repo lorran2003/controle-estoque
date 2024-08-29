@@ -5,6 +5,8 @@ import * as stockMovementBusiness from "../../../src/main/business/stockMovement
 import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
+import { StockCategory, Stocktypes } from "../../../src/shared/stockEnums";
+import { type } from "os";
 
 describe('Product controller', () => {
     let productValid = null
@@ -48,9 +50,11 @@ describe('Product controller', () => {
         }
 
         initStock = {
-            type: "INPUT",
+            type: Stocktypes.INPUT,
             priceUnit: productValid.priceCost,
             quantity: 20,
+            category: StockCategory.INITIAL_STOCK,
+            description:"ESTOQUE INICIAL",
             total: productValid.currentStock * productValid.priceCost
         }
 
@@ -66,6 +70,7 @@ describe('Product controller', () => {
             const product = await productBusiness.create(null, productValid)
             expect(product).toMatchObject(productValid)
             const [movement] = await stockMovementBusiness.findByProductId(null, product.id)
+            console.log(movement)
             expect(movement).toMatchObject(initStock)
         })
 
@@ -174,11 +179,39 @@ describe('Product controller', () => {
             const movements = await stockMovementBusiness.findByProductId(null, id)
 
             const adjustStock = {
-                type: "ADJUSTMENT",
+                type: "INPUT",
                 quantity: 80,
+                category:StockCategory.ADJUSTMENT,
+                description:"Ajuste de quantidade manual",
                 priceUnit: productValid.priceCost,
                 total: productValid.priceCost * 80
             }
+
+            expect(movements[0]).toMatchObject(initStock)
+            expect(movements[1]).toMatchObject(adjustStock)
+        })
+
+        it("should update product", async () => {
+            const { id } = await productBusiness.create(null, productValid)
+
+            productValid.img = updatePathImg
+            productValid.currentStock = 10
+            const productToUpate = { ...productValid, id }
+
+            const productUpdated = await productBusiness.update(null, productToUpate)
+
+            expect(productUpdated).toMatchObject(productToUpate)
+            const movements = await stockMovementBusiness.findByProductId(null, id)
+
+            const adjustStock = {
+                type:Stocktypes.OUTPUT,
+                quantity: 10,
+                category:StockCategory.ADJUSTMENT,
+                description:"Ajuste de quantidade manual",
+                priceUnit: productValid.priceCost,
+                total: productValid.priceCost * 10
+            }
+            console.log(movements)
 
             expect(movements[0]).toMatchObject(initStock)
             expect(movements[1]).toMatchObject(adjustStock)
