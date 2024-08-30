@@ -1,13 +1,13 @@
 import Joi from "joi";
 
-const idValidation = Joi.number().integer().min(1).required().messages({
+export const idValidation = Joi.number().integer().min(1).required().messages({
     'number.base': 'O id deve ser um numero inteiro',
     'number.integer': 'O id deve ser um numero inteiro',
     'number.min': 'O valor deve ser maior que 0',
     'any.required': 'O id é obrigatório',
 })
 
-const nameValidationOptional = Joi.string()
+export const nameValidationOptional = Joi.string()
     .max(255)
     .allow('')
     .messages({
@@ -15,7 +15,7 @@ const nameValidationOptional = Joi.string()
         'string.max': 'O nome deve ter no máximo {#limit} caracteres.'
     });
 
-const nameValidation = Joi.string()
+export const nameValidation = Joi.string()
     .max(255)
     .required()
     .messages({
@@ -25,7 +25,7 @@ const nameValidation = Joi.string()
         'any.required': 'O nome é obrigatório.'
     })
 
-const codeValidation = Joi.string()
+export const codeValidation = Joi.string()
     .length(6)
     .pattern(/^[A-Z0-9]{6}$/)
     .required()
@@ -37,7 +37,7 @@ const codeValidation = Joi.string()
         'any.required': 'O código é obrigatório.'
     })
 
-const imgValidation = Joi.string()
+export const imgValidation = Joi.string()
     .allow(null)
     .optional()
     .messages({
@@ -46,7 +46,7 @@ const imgValidation = Joi.string()
     })
 
 
-const priceSaleValidation = Joi.number()
+export const priceSaleValidation = Joi.number()
     .integer()
     .min(0)
     .required()
@@ -57,7 +57,7 @@ const priceSaleValidation = Joi.number()
         'any.required': 'O preço de venda é obrigatório.'
     })
 
-const priceCostValidation = Joi.number()
+export const priceCostValidation = Joi.number()
     .integer()
     .min(0)
     .required()
@@ -69,7 +69,7 @@ const priceCostValidation = Joi.number()
     })
 
 
-const currentStockValidation = Joi.number()
+export const currentStockValidation = Joi.number()
     .integer()
     .min(0)
     .required()
@@ -81,7 +81,7 @@ const currentStockValidation = Joi.number()
     })
 
 
-const minimumStockValidation = Joi.number()
+export const minimumStockValidation = Joi.number()
     .integer()
     .min(0)
     .required()
@@ -92,7 +92,7 @@ const minimumStockValidation = Joi.number()
         'any.required': 'O estoque minimo é obrigatório.'
     })
 
-const productValidation = Joi.object({
+export const productValidation = Joi.object({
     name: nameValidation,
     code: codeValidation,
     img: imgValidation,
@@ -126,16 +126,4 @@ export const destroyValidator = (id) => {
 
 export const updateValidator = (product) => {
     return productValidation.keys({ id: idValidation }).validate(product)
-}
-
-export default {
-    idValidation,
-    codeValidation,
-    nameValidation,
-    priceSaleValidation,
-    priceCostValidation,
-    nameValidationOptional,
-    currentStockValidation,
-    minimumStockValidation,
-    imgValidation
 }

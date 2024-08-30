@@ -6,7 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import setupProductIpc from './ipc/productIpc'
 import db from './database/db'
 import path from 'path'
-import { DEST_IMG} from './util/path'
+import { DEST_IMG } from './util/path'
 
 
 function createWindow() {
@@ -64,7 +64,7 @@ db.sequelize.sync({ force: true }).then(() => {
     //setup protocol
     protocol.handle('app', (request) => {
       const filePath = request.url.slice('app://'.length)
-      const finalPath = path.join(DEST_IMG,filePath)
+      const finalPath = path.join(DEST_IMG, filePath)
       return net.fetch(url.pathToFileURL(path.resolve(finalPath)).toString())
     })
     // setup listeners
