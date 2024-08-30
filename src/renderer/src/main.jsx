@@ -3,12 +3,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from './App'
 import { Home } from './page/Home'
-import { CreateProduct } from './components/CreateProduct'
+import { CreateProduct } from './page/CreateProduct'
 import { createHashRouter, Route, createRoutesFromElements, RouterProvider } from 'react-router-dom'
 import { Product } from './page/Product'
 import { Login } from './components/Login'
 import { EditProduct } from './components/EditProduct'
-import { MenageProducts } from './components/MenageProducts'
+import { MenageProducts } from './page/MenageProducts'
 
 const router = createHashRouter(
   createRoutesFromElements(

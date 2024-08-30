@@ -1,8 +1,8 @@
 import logo from '../assets/logo/logo.jpg'
-import person from '../assets/icons/person.svg'
-import lock from '../assets/icons/lock.svg'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserLock, faUser } from '@fortawesome/free-solid-svg-icons'
 
 export function Login() {
   const [overflow, setOverFlow] = useState(false)
@@ -28,8 +28,7 @@ export function Login() {
           <img
             src={logo}
             alt="logo marca"
-            width={120}
-            className="rounded-full m-auto shadow-md border-2 border-solid border-[#9E895F]"
+            className="rounded-full m-auto shadow-md border-2 border-solid border-[#9E895F] w-28"
           />
         </i>
 
@@ -37,9 +36,10 @@ export function Login() {
           <h1 className="pb-2 text-2xl">Bem vindo!</h1>
 
           <div className="flex justify-center items-center gap-2 py-6">
-            <i className="bg-zinc-50 rounded-full shadow-md p-1 border-2 border-solid border-[#9E895F]">
-              <img src={person} alt="icon person" width={35} />
-            </i>
+            <FontAwesomeIcon
+              icon={faUser}
+              className="text-[#9E895F] size-7 rounded-full m-auto shadow-md border-2 border-solid border-[#9E895F] p-2 bg-zinc-50"
+            />
             <input
               type="text"
               placeholder="Digite seu login"
@@ -48,9 +48,10 @@ export function Login() {
           </div>
 
           <div className="flex justify-center items-center gap-2">
-            <i className="bg-zinc-50 rounded-full shadow-md p-1 border-2 border-solid border-[#9E895F]">
-              <img src={lock} alt="icon person" width={35} />
-            </i>
+            <FontAwesomeIcon
+              icon={faUserLock}
+              className="text-[#9E895F] size-7 rounded-full m-auto shadow-md border-2 border-solid border-[#9E895F] p-2 bg-zinc-50"
+            />
             <input
               type="password"
               placeholder="Digite sua senha"

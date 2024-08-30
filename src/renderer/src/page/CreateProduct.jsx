@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import arrowLeft from '../assets/icons/arrow-left.svg'
-import { Link } from 'react-router-dom'
 import { ErrorTypes } from '../../../shared/errorTypes'
-/* eslint-disable react/prop-types */
+import { ButtonReturn } from '../components/ButtonReturn'
+
 export function CreateProduct() {
   const [productName, setProductName] = useState('')
   const [barcode, setBarcode] = useState('')
@@ -47,15 +46,7 @@ export function CreateProduct() {
 
   return (
     <section className="py-8 px-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-      <Link
-        to="/home/products"
-        className="flex w-28 items-center gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
-      >
-        <i>
-          <img src={arrowLeft} alt="voltar" width={20} />
-        </i>
-        Voltar
-      </Link>
+      <ButtonReturn route="/home/products" />
 
       <form onSubmit={handleSubmit} className="mt-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Criar produto</h1>
@@ -69,7 +60,7 @@ export function CreateProduct() {
             maxLength={255}
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
         </div>
 
@@ -81,7 +72,7 @@ export function CreateProduct() {
             placeholder="Digite o código, ex: A1B2C3"
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
         </div>
 
@@ -93,7 +84,7 @@ export function CreateProduct() {
               min={1}
               value={currentStock}
               onChange={(e) => setCurrentStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
           </div>
 
@@ -104,7 +95,7 @@ export function CreateProduct() {
               value={minimumStock}
               min={1}
               onChange={(e) => setMinimumStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
           </div>
         </div>
@@ -116,7 +107,7 @@ export function CreateProduct() {
             type="number"
             value={priceSale}
             onChange={(e) => setpriceSale(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
         </div>
 
@@ -127,7 +118,7 @@ export function CreateProduct() {
             min={1}
             value={priceCost}
             onChange={(e) => setpriceCost(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
         </div>
 
@@ -140,7 +131,7 @@ export function CreateProduct() {
               console.log(e.target.files[0].path)
               setProductImage(e.target.files[0].path)
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
           {previewImage && (
             <img
@@ -153,7 +144,7 @@ export function CreateProduct() {
 
         <button
           type="submit"
-          className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700"
+          className="w-full bg-red-600 text-white rounded-md px-4 py-2 shadow hover:bg-red-700 focus:ring-red-500 focus:outline-red-500"
         >
           Cadastrar Produto
         </button>

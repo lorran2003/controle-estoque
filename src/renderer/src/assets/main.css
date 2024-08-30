@@ -9,5 +9,11 @@ body{
   text-shadow: 1px 1px rgb(63, 62, 62);
 }
 input:focus{
+  outline: 2px solid #9E895F;
   border: 2px #9E895F;
 }
+form input:focus{
+  outline: 2px solid red;
+  border: 2px red;
+}
+
