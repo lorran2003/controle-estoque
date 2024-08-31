@@ -18,14 +18,14 @@ export function Main() {
           icon={faDropbox}
           title="Gerenciar entrada de produtos"
           textButton="Entrada"
-          route="/home/menage-products"
+          route="/home/menage-products-entries"
         />
 
         <Card
           icon={faBox}
           title="Gerenciar saída de produtos"
           textButton="Saída"
-          route="/home"
+          route="/home/menage-products-outputs"
         />
 
         <Card

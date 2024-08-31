@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
 import { FilterProduct } from '../components/FilterProduct'
 import { ButtonReturn } from '../components/ButtonReturn'
-import { Button } from '../components/Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEye,
   faPlus,
@@ -12,17 +11,17 @@ import {
   faPencil,
   faRotate
 } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons'
-import { ProductsTable } from '../components/ProductsTable'
+import { Button } from '../components/Button'
+import { ManageTable } from '../components/ManageTable'
 
-export function Product() {
+export function ManageProductEntries() {
   return (
     <section>
       <div className="px-10 py-10">
         <ButtonReturn route="/home" />
 
-        <h1 className="text-3xl pt-2">Produtos</h1>
+        <h1 className="text-3xl pt-2">Entradas de produtos</h1>
 
         <FilterProduct />
 
@@ -42,7 +41,7 @@ export function Product() {
           />
         </div>
 
-        <ProductsTable />
+        <ManageTable />
 
         <div className="flex gap-4 justify-end text-zinc-50">
           <Button
@@ -70,7 +69,7 @@ export function Product() {
 
       <h2 className="text-center text-xl">Mostrando 1 - 1 de resultados</h2>
 
-      <div className="w-full flex justify-center items-center gap-2">
+      <nav className="w-full flex justify-center items-center gap-2">
         <button
           type="button"
           aria-label="pagina anterior"
@@ -94,7 +93,7 @@ export function Product() {
         <button className="bg-zinc-50 rounded-md shadow-md p-2 duration-300 hover:px-3">
           <FontAwesomeIcon icon={faAngleDoubleRight} />
         </button>
-      </div>
+      </nav>
     </section>
   )
 }

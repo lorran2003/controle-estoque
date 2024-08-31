@@ -8,14 +8,16 @@ import { createHashRouter, Route, createRoutesFromElements, RouterProvider } fro
 import { Product } from './page/Product'
 import { Login } from './components/Login'
 import { EditProduct } from './components/EditProduct'
-import { MenageProducts } from './page/MenageProducts'
+import { ManageProductEntries } from './page/ManageProductEntries'
+import { ManageProductOutputs } from './page/ManageProductOutputs'
 
 const router = createHashRouter(
   createRoutesFromElements(
     <Route element={<App />}>
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/home/menage-products" element={<MenageProducts />} />
+      <Route path="/home/menage-products-entries" element={<ManageProductEntries />} />
+      <Route path="/home/menage-products-outputs" element={<ManageProductOutputs />} />
       <Route path="/home/products" element={<Product />} />
       <Route path="/home/products/create-product" element={<CreateProduct />} />
       <Route path="/home/products/edit-product" element={<EditProduct />} />
