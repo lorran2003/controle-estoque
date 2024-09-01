@@ -7,7 +7,7 @@ import { CreateProduct } from './page/CreateProduct'
 import { createHashRouter, Route, createRoutesFromElements, RouterProvider } from 'react-router-dom'
 import { Product } from './page/Product'
 import { Login } from './components/Login'
-import { EditProduct } from './components/EditProduct'
+import { EditProduct } from './page/EditProduct'
 import { ManageProductEntries } from './page/ManageProductEntries'
 import { ManageProductOutputs } from './page/ManageProductOutputs'
 

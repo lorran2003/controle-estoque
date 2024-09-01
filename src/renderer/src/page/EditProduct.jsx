@@ -1,6 +1,5 @@
-import arrowLeft from '../assets/icons/arrow-left.svg'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { ButtonReturn } from '../components/ButtonReturn'
 
 export function EditProduct() {
   const [productName, setProductName] = useState('')
@@ -43,15 +42,7 @@ export function EditProduct() {
 
   return (
     <section className="py-8 px-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-      <Link
-        to="/home/products"
-        className="flex w-28 items-center gap-2 bg-red-700 text-white shadow-md rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 duration-500 hover:bg-red-600 hover:shadow-inner hover:shadow-zinc-800 hover:-translate-y-1"
-      >
-        <i>
-          <img src={arrowLeft} alt="voltar" width={20} />
-        </i>
-        Voltar
-      </Link>
+      <ButtonReturn route="/home/products" />
 
       <form onSubmit={handleSubmit} className="mt-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Editar produto</h1>

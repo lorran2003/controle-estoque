@@ -28,7 +28,7 @@ export function Product() {
 
         <div className="text-zinc-50 flex gap-4 justify-end">
           <Button
-            route="/home/products/create-product"
+            route="/home/products"
             style="bg-yellow-500"
             text="Atualizar"
             icon={faRotate}
@@ -46,21 +46,21 @@ export function Product() {
 
         <div className="flex gap-4 justify-end text-zinc-50">
           <Button
-            route="/home/products/create-product"
+            route="/home/products"
             style="bg-yellow-500"
             text="Visualizar"
             icon={faEye}
           />
 
           <Button
-            route="/home/products/create-product"
+            route="/home/products/edit-product"
             style="bg-blue-700"
             text="Editar"
             icon={faPencil}
           />
 
           <Button
-            route="/home/products/create-product"
+            route="/home/products"
             style="bg-red-600"
             text="Deletar"
             icon={faCircleXmark}
