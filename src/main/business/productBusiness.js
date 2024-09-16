@@ -1,20 +1,22 @@
 import { handleProductImageUpdate, existsProductBy, deleteImg, saveImg } from "../util/productHelper.js"
-import CustomError from "../util/CustomError.js"
+import { EntityAlreadyExistsError } from "../erros/EntityAlreadyExistsError.js"
+import { StockCategory, Stocktypes } from "../../shared/stockEnums.js"
+import { EntityNotFound } from "../erros/EntityNotFoundError.js"
 import db from "../database/db.js"
 import { Op } from "sequelize"
-import { StockCategory, Stocktypes } from "../../shared/stockEnums.js"
 
 export const create = async (event, productData) => {
   const transaction = await db.sequelize.transaction()
 
   if (await existsProductBy({ name: productData.name })) {
-    throw new CustomError('Já existe um produto com esse nome.')
+    throw new EntityAlreadyExistsError('Já existe um produto com esse nome.')
   }
 
   if (await existsProductBy({ code: productData.code })) {
-    throw new CustomError('Já existe um produto com esse código.')
+    throw new EntityAlreadyExistsError('Já existe um produto com esse código.')
   }
 
+  
   if (productData.img) {
     const filename = saveImg(productData.img)
     productData.img = filename
@@ -48,9 +50,9 @@ export const create = async (event, productData) => {
 
 export const findById = async (event, id) => {
   const productFound = await db.Product.findByPk(id)
-
+ 
   if (!productFound) {
-    throw new CustomError("Não existe Produto com esse id")
+    throw new  EntityNotFound("Não existe Produto com esse id")
   }
 
   return productFound.dataValues
@@ -60,7 +62,7 @@ export const findByCode = async (event, code) => {
   const productFound = await db.Product.findOne({ where: { code } })
 
   if (!productFound) {
-    throw new CustomError("Não existe Produto com esse código")
+    throw new EntityNotFound("Não existe Produto com esse código")
   }
 
   return productFound.dataValues
@@ -78,7 +80,7 @@ export const destroy = async (event, id) => {
   const productFound = await db.Product.findByPk(id)
 
   if (!productFound) {
-    throw new CustomError("Não existe Produto com esse id")
+    throw new EntityNotFound("Não existe Produto com esse id")
   }
 
   deleteImg(productFound.img)
@@ -91,18 +93,18 @@ export const update = async (event, productData) => {
   const transaction = await db.sequelize.transaction()
   const existingProduct = await db.Product.findByPk(productData.id)
   if (!existingProduct) {
-    throw new CustomError("Não existe Produto com esse id")
+    throw new EntityNotFound("Não existe Produto com esse id")
   }
 
   const isNameChanged = existingProduct.name !== productData.name
   const isCodeChanged = existingProduct.code !== productData.code
 
   if (isNameChanged && await existsProductBy({ name: productData.name })) {
-    throw new CustomError('Já existe um produto com esse nome.')
+    throw new EntityAlreadyExistsError('Já existe um produto com esse nome.')
   }
 
   if (isCodeChanged && await existsProductBy({ code: productData.code })) {
-    throw new CustomError('Já existe um produto com esse código.')
+    throw new EntityAlreadyExistsError('Já existe um produto com esse código.')
   }
 
   const newFilename = handleProductImageUpdate(existingProduct, productData)
@@ -112,7 +114,7 @@ export const update = async (event, productData) => {
   try {
 
     const adjustQty = productData.currentStock - existingProduct.currentStock
-   
+
     await existingProduct.update(productData, { transaction })
     if (adjustQty !== 0) {
 
@@ -123,7 +125,7 @@ export const update = async (event, productData) => {
         quantity: Math.abs(adjustQty),
         description: "Ajuste de quantidade manual",
         priceUnit: productData.priceCost,
-        total: productData.priceCost *  Math.abs(adjustQty)
+        total: productData.priceCost * Math.abs(adjustQty)
       }
 
       await db.StockMovement.create(adjustStock, { transaction })
