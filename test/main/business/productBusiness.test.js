@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import db from "../../../src/main/database/db";
 import * as productBusiness from "../../../src/main/business/productBusiness";
 import * as stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
@@ -6,7 +6,6 @@ import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
 import { StockCategory, Stocktypes } from "../../../src/shared/stockEnums";
-import { type } from "os";
 
 describe('Product controller', () => {
     let productValid = null
@@ -70,7 +69,6 @@ describe('Product controller', () => {
             const product = await productBusiness.create(null, productValid)
             expect(product).toMatchObject(productValid)
             const [movement] = await stockMovementBusiness.findByProductId(null, product.id)
-            console.log(movement)
             expect(movement).toMatchObject(initStock)
         })
 
@@ -211,7 +209,6 @@ describe('Product controller', () => {
                 priceUnit: productValid.priceCost,
                 total: productValid.priceCost * 10
             }
-            console.log(movements)
 
             expect(movements[0]).toMatchObject(initStock)
             expect(movements[1]).toMatchObject(adjustStock)
@@ -237,7 +234,6 @@ describe('Product controller', () => {
             const pCreated = await productBusiness.create(null, otherProductValid)
 
             pCreated.code = productValid.code
-
             expect(productBusiness.update(null, pCreated))
                 .rejects.toThrow("Já existe um produto com esse código.")
         })

@@ -1,4 +1,4 @@
-import CustomError from './CustomError'
+import BaseError from '../erros/BaseError'
 import { ErrorTypes } from '../../shared/errorTypes'
 
 const getErrorResponse = (type, message) => ({
@@ -20,8 +20,8 @@ const handleError = (func) => {
             const result = await func(...params)
             return getSuccessResponse(result)
         } catch (error) {
-            if (error instanceof CustomError) {
-                return getErrorResponse(ErrorTypes.CUSTOM, error.message)
+            if (error instanceof BaseError) {
+                return getErrorResponse(error.errorType, error.message)
             }
 
             return getErrorResponse(ErrorTypes.INTERNAL, error.message)
