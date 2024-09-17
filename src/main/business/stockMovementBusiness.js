@@ -1,7 +1,7 @@
 import { EntityNotFound } from "../erros/EntityNotFoundError.js"
 import { StockAdjustmentError } from "../erros/StockAdjustmentError.js"
 import db from "../database/db.js"
-import { adjustStock } from "../util/stockMovementHelper.js"
+import { adjustStock } from "../helper/stockMovementHelper.js"
 import { Op } from "sequelize"
 
 

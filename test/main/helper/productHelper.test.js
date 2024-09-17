@@ -85,7 +85,7 @@ describe("Product Helper", () => {
     
         it("should delete the existing image and return null when no new image is provided", () => {
             existingProduct.img = pathImg
-            const result = productHelper.handleProductImageUpdate(existingProduct, {})
+            const result = productHelper.handleUpdateImage(existingProduct, {})
             expect(result).toBeNull()
         })
     
@@ -95,7 +95,7 @@ describe("Product Helper", () => {
             existingProduct.img = filenameImg
             validatedProductData.img = pathImg
 
-            const result = productHelper.handleProductImageUpdate(existingProduct, validatedProductData)
+            const result = productHelper.handleUpdateImage(existingProduct, validatedProductData)
 
             expect(result).not.toBeNull()
             expect(result).not.toBe(filenameImg)
@@ -107,7 +107,7 @@ describe("Product Helper", () => {
             const filenameImg = productHelper.saveImg(pathImg)
             existingProduct.img = filenameImg
 
-            const result = productHelper.handleProductImageUpdate(existingProduct,existingProduct)
+            const result = productHelper.handleUpdateImage(existingProduct,existingProduct)
             expect(result).not.toBeNull()
             expect(result).toBe(existingProduct.img)
         })

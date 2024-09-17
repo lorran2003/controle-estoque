@@ -4,6 +4,7 @@ import { DEST_IMG } from "../util/path.js"
 import { Stocktypes, StockCategory } from "../../shared/stockEnums"
 import fs from 'fs'
 import { SaveImageError } from "../erros/SaveImageError"
+import { EntityAlreadyExistsError } from "../erros/EntityAlreadyExistsError.js"
 
 export const existsProductBy = async (attributes) =>
     db.Product.findOne({ where: { ...attributes } })
@@ -100,10 +101,16 @@ export const handleUniqueFieldsInUpdate = async (existingProduct, productData) =
     const isNameChanged = existingProduct.name !== productData.name
     const isCodeChanged = existingProduct.code !== productData.code
 
-    if (isNameChanged || isCodeChanged) {
-        await handleUniqueFields(productData)
+
+    if (isNameChanged && await existsProductBy({ name: productData.name })) {
+        throw new EntityAlreadyExistsError('Já existe um produto com esse nome.')
+    }
+
+    if (isCodeChanged && await existsProductBy({ code: productData.code })) {
+        throw new EntityAlreadyExistsError('Já existe um produto com esse código.')
     }
 }
+
 
 
 export const handleAdjustStock = async ({ existingProduct, productData, transaction }) => {
