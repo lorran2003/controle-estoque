@@ -1,10 +1,9 @@
 import db from "../database/db"
 import path from 'path'
-import { DEST_IMG } from "./path"
+import { DEST_IMG } from "../util/path.js"
 import { Stocktypes, StockCategory } from "../../shared/stockEnums"
 import fs from 'fs'
 import { SaveImageError } from "../erros/SaveImageError"
-import BaseError from "../erros/BaseError"
 
 export const existsProductBy = async (attributes) =>
     db.Product.findOne({ where: { ...attributes } })
@@ -14,27 +13,19 @@ export const isExistsFile = (path) => {
 }
 
 export const saveImg = (pathImg) => {
-    try {
-        if (!isExistsFile(pathImg)) {
-            throw new SaveImageError('Arquivo de origem não existe')
-        }
-
-        const fileName = path.basename(pathImg)
-        const ext = path.extname(fileName)
-        const baseName = path.basename(fileName, ext)
-        const uniqueName = `${baseName}-${Date.now()}${ext}`
-        const finalPath = path.join(DEST_IMG, uniqueName)
-
-        fs.copyFileSync(pathImg, finalPath)
-
-        return uniqueName
-    } catch (err) {
-        if (err instanceof BaseError) {
-            throw err
-        }
-        throw new SaveImageError(err.message)
+    if (!isExistsFile(pathImg)) {
+        throw new SaveImageError('Arquivo de origem não existe')
     }
 
+    const fileName = path.basename(pathImg)
+    const ext = path.extname(fileName)
+    const baseName = path.basename(fileName, ext)
+    const uniqueName = `${baseName}-${Date.now()}${ext}`
+    const finalPath = path.join(DEST_IMG, uniqueName)
+
+    fs.copyFileSync(pathImg, finalPath)
+
+    return uniqueName
 }
 
 export const deleteImg = (filename) => {

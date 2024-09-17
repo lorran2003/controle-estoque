@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import db from "../../../src/main/database/db";
 import * as productBusiness from "../../../src/main/business/productBusiness";
 import * as stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
@@ -6,7 +6,6 @@ import path from 'path'
 import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
 import { StockCategory, Stocktypes } from "../../../src/shared/stockEnums";
-import { type } from "os";
 
 describe('Product controller', () => {
     let productValid = null

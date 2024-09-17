@@ -1,4 +1,4 @@
-import { handleUpdateImage, deleteImg, handleSaveImg, handleCreateInitialStock, handleUniqueFields,handleUniqueFieldsInUpdate } from "../util/productHelper.js"
+import { handleUpdateImage, deleteImg, handleSaveImg, handleCreateInitialStock,handleAdjustStock, handleUniqueFields,handleUniqueFieldsInUpdate } from "../helper/productHelper.js"
 import { EntityNotFound } from "../erros/EntityNotFoundError.js"
 import db from "../database/db.js"
 import { Op } from "sequelize"
@@ -90,5 +90,5 @@ export const update = async (event, productData) => {
 
 export const findAll = async (event) => {
   const products = await db.Product.findAll()
-  return products.map(p => p.dataValues)
+  return products.map((p) => p.dataValues)
 }

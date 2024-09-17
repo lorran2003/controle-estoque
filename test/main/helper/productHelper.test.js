@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest"
-import * as productHelper from "../../../src/main/util/productHelper"
+import * as productHelper from '../../../src/main/helper/productHelper.js'
 import fs from 'fs/promises'
 import * as fsSync from 'fs'
 import path from 'path'
