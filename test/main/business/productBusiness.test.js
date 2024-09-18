@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import db from "../../../src/main/database/db";
 import * as productBusiness from "../../../src/main/business/productBusiness";
 import * as stockMovementBusiness from "../../../src/main/business/stockMovementBusiness";
@@ -7,7 +7,7 @@ import fs from 'fs/promises'
 import { DEST_IMG } from "../../../src/main/util/path";
 import { StockCategory, Stocktypes } from "../../../src/shared/stockEnums";
 
-describe('Product controller', () => {
+describe('Product business', () => {
     let productValid = null
     let invalidCode = null
     let validCode = null
@@ -27,7 +27,7 @@ describe('Product controller', () => {
     })
 
     beforeAll(async () => {
-        await db.sequelize.sync({ force: true })
+        await db.sequelize.sync({force:true})
     })
 
     beforeEach(async () => {
@@ -57,11 +57,12 @@ describe('Product controller', () => {
             total: productValid.currentStock * productValid.priceCost
         }
 
-        otherProductValid = { ...productValid, name: 'potato', code: 'CCCCCC' }
-
-        await db.sequelize.truncate()
+        otherProductValid = { ...productValid, name: 'potato', code: 'CCCCCC' } 
     })
 
+    afterEach(async () => {
+        await db.sequelize.truncate()
+    } )
 
     describe("create()", () => {
 
