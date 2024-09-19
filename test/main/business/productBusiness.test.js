@@ -62,7 +62,7 @@ describe('Product business', () => {
 
     afterEach(async () => {
         await db.sequelize.truncate()
-    } )
+    })
 
     describe("create()", () => {
 

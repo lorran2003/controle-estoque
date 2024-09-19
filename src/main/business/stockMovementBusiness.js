@@ -122,9 +122,10 @@ export const destroy = async (event, id) => {
     }
 }
 
-export const findAll = async (event, page = 1, limit = 10) => {
+export const findAll = async (event,type, page = 1, limit = 10) => {
     const offset = (page - 1) * limit
     const stockMovements = await db.StockMovement.findAll({
+        where:{type},
         limit,
         offset,
     })
